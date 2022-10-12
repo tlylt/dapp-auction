@@ -44,7 +44,7 @@ contract Auction is ReentrancyGuard {
         require(!started, "Auction already started!");
         require(msg.sender == seller, "You did not start the auction!");
         require(_duration > 0, "Duration must be greater than 0!");
-        require(increment > 0, "Increment must be greater than 0!");
+        require(_increment > 0, "Increment must be greater than 0!");
         require(startingBid > 0, "Starting bid must be greater than 0!");
         highestBid = startingBid;
 
@@ -101,9 +101,9 @@ contract Auction is ReentrancyGuard {
 
     function withdraw() nonReentrant external payable {
         require(started, "Auction not started!");
+        require(msg.sender != highestBidder, "Highest bidder cannot withdraw.");
         uint bal = bids[msg.sender];
         require(bal > 0, "No balance to withdraw.");
-        require(msg.sender != highestBidder, "Highest bidder cannot withdraw.");
 
         bids[msg.sender] = 0; // Ensure all state changes happen before calling external contracts
         (bool sent,) = payable(msg.sender).call{value: bal}("");
