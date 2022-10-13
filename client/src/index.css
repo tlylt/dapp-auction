@@ -12,3 +12,19 @@ html {
   width: 100vw;
   height: 100vh;
 }
+
+#ConnectWallet {
+  position: absolute;
+  top: 30px;
+  right: 30px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+#ConnectWallet button {
+  background-color: #3f50b5;
+  color: white;
+  font-weight: bold;
+  width: 350px;
+}
