@@ -45,13 +45,13 @@ First we need to obtain the ipfs hash for the nft metadata that you want
 ```
    node scripts/runScipt.js
 ```
-4. Open client/data/ipfsHash.json. You should see your image hash in the last entry together with the PinSize and Timestamp of hashing. To view the pinned image on pinata, browse: https://gateway.pinata.cloud/ipfs/{your IpfsHash}
+4. Open client/data/ipfsHash.json. You should see your image hash in the last entry together with the PinSize and Timestamp of hashing. To view the pinned image on pinata, browse: https://gateway.pinata.cloud/ipfs/{your_IpfsHash}
 5. We now need a second hash to include the other NFT attributes. Open client/data/metadata.json and replace "image" with the link in step 4, as well as add any attributes you want into "attributes". You can change the description and name accordingly as well.
 6. Edit runScript.js
    1. Comment line 4
    2. Uncomment line 5
 7. Do step 3
-8. Another IpfsHash entry is recorded into ipfsHash.json. Similarly, view the pinned metadata by browsing: https://gateway.pinata.cloud/ipfs/{your IpfsHash}
+8. Another IpfsHash entry is recorded into ipfsHash.json. Similarly, view the pinned metadata by browsing: https://gateway.pinata.cloud/ipfs/{your_IpfsHash}
 Congratulations, you have no successfully pinned the nft metadata that you want.
 
 Now we need to mint an NFT using the metadata you have just created. We do this in the Goerli Testnet as our contract has already been deployed there.
@@ -66,7 +66,7 @@ Now we need to mint an NFT using the metadata you have just created. We do this 
    await nft.mint('https://gateway.pinata.cloud/ipfs/{ipfsHash}') // This ipfsHash should be from step 8 previously. Once minted, check your token id from the transaction information "type".
    await nft.ownerOf({token id}) // token id obtained from the previous step "type", this command should return your metamask address
 ```
-3. You have now successfully minted your nft. View the nft at: https://testnets.opensea.io/assets/goerli/0x60dd627e671F65b8cDFaf39AA0FB6b00ae1C18D6/{your token id}
+3. You have now successfully minted your nft. View the nft at: https://testnets.opensea.io/assets/goerli/0x60dd627e671F65b8cDFaf39AA0FB6b00ae1C18D6/{your_token_id}
 
 
 ## Smart Contract Design
