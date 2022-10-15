@@ -1,7 +1,12 @@
 const path = require("path");
-const pinFileToIPFS = require("./pinFileToIPFS");
+const pinDataToIPFS = require("./pinDataToIPFS");
+const pinImage = require("./pinImage");
 
-// const filePath = path.join(__dirname, "../assets/octopus.jpg");
-const filePath = path.join(__dirname, "../data/metadata.json");
+const pinData = async () => {
+    const imgPath = path.join(__dirname, "../assets/octopus.jpg");
+    await pinImage(imgPath);
+    const dataPath = path.join(__dirname, "../data/metadata.json");
+    pinDataToIPFS(dataPath);
+};
 
-pinFileToIPFS(filePath);
+pinData();

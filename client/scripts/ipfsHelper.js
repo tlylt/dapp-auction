@@ -39,7 +39,21 @@ async function fileExists(path) {
     }
 }
 
+const fillIpfsHashToMetaData = async (metaDataFilePath) => {
+    const ipfsFilePath = path.join(__dirname, config.get("ipfsFile.location"));
+    // Read ipfsHash
+    const data = await fs.readFile(ipfsFilePath, "utf8");
+    const json = JSON.parse(data);
+    const ipfsHash = json[json.length - 1].IpfsHash;
+    // Write Hash into image link
+    var metadata = await fs.readFile(metaDataFilePath, "utf8");
+    var metadataJson = JSON.parse(metadata);
+    metadataJson.image = "https://gateway.pinata.cloud/ipfs/" + ipfsHash;
+    fs.writeFile(metaDataFilePath, JSON.stringify(metadataJson));
+};
+
 module.exports = {
     storeDataToFile,
     fileExists,
+    fillIpfsHashToMetaData,
 };

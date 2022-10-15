@@ -18,11 +18,9 @@
  *
  */
 
-// require("dotenv").config();
-const mnemonic =
-    "spread thumb kitchen benefit twist initial level fix favorite vendor kit roof";
-const clientURL =
-    "https://goerli.infura.io/v3/7a459753cf554742a27d7e85bdaf31ad";
+require("dotenv").config();
+const mnemonic = process.env.MNEMONIC;
+const clientURL = process.env.ETH_CLIENT_URL;
 // const infuraProjectId = process.env["INFURA_PROJECT_ID"];
 
 const HDWalletProvider = require("@truffle/hdwallet-provider");
