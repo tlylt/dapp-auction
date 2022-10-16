@@ -6,6 +6,8 @@ import App from "./App";
 import "./index.css";
 import { HelmetProvider } from 'react-helmet-async'
 
+require("dotenv").config();
+
 function getLibrary(provider) {
   return new Web3Provider(provider);
 }

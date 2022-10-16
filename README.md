@@ -52,16 +52,27 @@ Now we need to mint an NFT using the metadata you have just created. We do this 
 2. Navigate into from the folder root ./truffle on your cmdln and open the truffle console and key in the following commands.
 ```
    cd truffle
-   npx truffle console --network goerli
+   npx truffle console --network development
    const nft = await MintNFT.deployed()   //returns undefined
-   nft.address // returns '0x60dd627e671F65b8cDFaf39AA0FB6b00ae1C18D6' - contract is deployed onto this address
+   nft.address // address where MintNFT contract is deployed to. Record this down for later
    // Once the above are confirmed, you can mine your nft
-   await nft.mint('https://gateway.pinata.cloud/ipfs/{ipfsHash}') // This ipfsHash should be from step 8 previously. Once minted, check your token id from the transaction information "type".
-   await nft.ownerOf({token id}) // token id obtained from the previous step "type", this command should return your metamask address
+   let res = await nft.mint('https://gateway.pinata.cloud/ipfs/{ipfsHash}') // ipfsHash is from step 5 previously
+   let tokenId = res.receipt.logs[0].args.tokenId.words[0] // the NFT token ID. Record this down for later
+
+   await nft.ownerOf({token id}) // token id obtained from the previous step "type", this command should return your metamask address. 
 ```
 3. You have now successfully minted your nft. View the nft at: https://testnets.opensea.io/assets/goerli/0x60dd627e671F65b8cDFaf39AA0FB6b00ae1C18D6/{your_token_id}
 
 
+## Auction Your Minted NFT
+1. Follow the previous section and note down the returned
+   -  nft.address
+   -  token id
+2. Make sure you know which chain you minted your NFT on before proceeding. Our frontend queries the local Ganache development network by default, and will NOT work if your NFT was minted on other test networks
+3. Press Create Auction, and fill in the form fields as below
+   - NFT Address --> nft.address
+   - NFT Token Id --> token id
+   - Starting Bid / Increment --> as desired
 ## Smart Contract Design
 
 ### Auction
