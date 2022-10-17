@@ -33,6 +33,35 @@ npm install
 npm start
 ```
 
+## Minting NFT
+
+### Instructions
+First we need to obtain the ipfs hash for the nft metadata that you want
+1. Navigate into client. Find a picture or gif that you like and save it into client/assets together with "octo.gif" and "octopus.jpg"
+2. Open client/data/metadata.json. Change the name, description and attributes to your liking. The image link does not matter.
+3. Edit runScript.js in client/scripts by editting line 6 imgPath to be: const filePath = path.join(__dirname, "../assets/{your file name}.{filetype}")
+4. Run runScript.js
+```
+   node scripts/runScipt.js
+```
+5. To view the pinned object, browse: https://gateway.pinata.cloud/ipfs/{your_IpfsHash}. Your ipfsHash can be obtained from the last entry in ipfsHash.json
+Congratulations, you have no successfully pinned the nft metadata that you want.
+
+Now we need to mint an NFT using the metadata you have just created. We do this in the Goerli Testnet as our contract has already been deployed there.
+1. First you need some GoerliETH to mint NFT on the network. Go to https://goerli-faucet.pk910.de/ to mine some test ethers.
+2. Navigate into from the folder root ./truffle on your cmdln and open the truffle console and key in the following commands.
+```
+   cd truffle
+   npx truffle console --network goerli
+   const nft = await MintNFT.deployed()   //returns undefined
+   nft.address // returns '0x60dd627e671F65b8cDFaf39AA0FB6b00ae1C18D6' - contract is deployed onto this address
+   // Once the above are confirmed, you can mine your nft
+   await nft.mint('https://gateway.pinata.cloud/ipfs/{ipfsHash}') // This ipfsHash should be from step 8 previously. Once minted, check your token id from the transaction information "type".
+   await nft.ownerOf({token id}) // token id obtained from the previous step "type", this command should return your metamask address
+```
+3. You have now successfully minted your nft. View the nft at: https://testnets.opensea.io/assets/goerli/0x60dd627e671F65b8cDFaf39AA0FB6b00ae1C18D6/{your_token_id}
+
+
 ## Smart Contract Design
 
 ### Auction
