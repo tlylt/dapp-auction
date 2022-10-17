@@ -14,10 +14,12 @@ const pinMetaData = async (metaDataFilePath) => {
     var metadata = await fs.readFile(metaDataFilePath, "utf8");
     var metadataJson = JSON.parse(metadata);
     // console.log(metadataJson);
+    const constName = "metadata.json";
     var data = JSON.stringify({
         ipfsPinHash: ipfsData.IpfsHash,
-        name: metadataJson.name,
+        name: constName,
         keyvalues: {
+            name: metadataJson.name,
             image: metadataJson.image,
             description: metadataJson.description,
         },
