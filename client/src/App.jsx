@@ -6,6 +6,7 @@ import Setup from "./components/Setup";
 import { EthProvider } from "./contexts/EthContext";
 
 import ConnectWallet from "./components/Intro/ConnectWallet";
+import CreateAuction from "./components/Intro/CreateAuction";
 
 function App() {
   return (
@@ -14,6 +15,9 @@ function App() {
         <div className="container">
           <div id="ConnectWallet">
             <ConnectWallet />
+          </div>
+          <div id="AuctionButton">
+            <CreateAuction />
           </div>
           <Intro />
           <hr />

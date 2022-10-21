@@ -28,3 +28,20 @@ html {
   font-weight: bold;
   width: 350px;
 }
+
+#AuctionButton {
+  position: absolute;
+  top: 80px;
+  right: 30px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+#AuctionButton button {
+  background-color: #3f50b5;
+  color: white;
+  font-weight: bold;
+  width: 350px;
+}
+
