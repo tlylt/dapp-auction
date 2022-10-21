@@ -5,14 +5,14 @@ import "./Auction.sol";
 
 contract AuctionFactory {
     Auction[] public auctions;
-    event ContractCreated(address newContractAddress)
+    event ContractCreated(address newContractAddress);
 
     function createNewAuction(
         IERC721 _nft,
         uint _nftId,
         uint _startingBid,
         uint _increment
-    ) public returns (Auction) {
+    ) public {
         Auction auction = new Auction(
             msg.sender,
             _nft,
@@ -21,6 +21,6 @@ contract AuctionFactory {
             _increment
         );
         auctions.push(auction);
-        emit ContractCreated(address(auction))
+        emit ContractCreated(address(auction));
     }
 }
