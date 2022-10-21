@@ -112,3 +112,17 @@ Resources:
 
 - [Hack Solidity: Reentrancy Attack](https://hackernoon.com/hack-solidity-reentrancy-attack)
 - [Re-Entrancy Attacks. How to avoid smart contract hacks and loss of funds](https://www.youtube.com/watch?v=6bQvKCKrATM)
+
+### Prevent Overflow Bug
+
+Mathematical operations in Solidity are subject to overflow and underflow bugs. These bugs can be exploited to drain funds from a contract.
+
+One possible solution is to use the SafeMath library. However, the SafeMath library is not used in this project as stated in the comment:
+> /**
+> * @dev Wrappers over Solidity's arithmetic operations.
+> *
+> * NOTE: `SafeMath` is generally not needed starting with Solidity 0.8, since the compiler
+> * now has built in overflow checking.
+> */
+
+Our auction contract uses Solidity 0.8.0, which has built-in overflow checking. Therefore, we do not need to use the SafeMath library.
