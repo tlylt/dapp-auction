@@ -4,7 +4,7 @@ import { useEth } from '../../contexts/EthContext';
 import './CreateAuctionPopup.css'
 
 const CreateAuctionPopup = (props) =>{
-  const { state: { web3, networkID }} = useEth();
+  const { state: { web3, networkID, accounts}} = useEth();
   const auctionJson = require('../../contracts/AuctionFactory.json');
   let auctionFactoryContract;
 
@@ -38,9 +38,20 @@ const CreateAuctionPopup = (props) =>{
 
   const handleCreate = async () => {
     let auctionAddress = auctionJson.networks[networkID].address
+    // console.log(typeof(auctionAddress))
     auctionFactoryContract = new web3.eth.Contract(auctionJson.abi, auctionAddress)
+    const tid = parseInt(vars.nftId)
+    const bid = parseInt(vars.startingBid)
+    const inc = parseInt(vars.increment)
+    console.log(vars.nftAddress)
     console.log(auctionFactoryContract.methods)
-    props.setTrigger(false)
+
+    let val = await auctionFactoryContract.methods.createNewAuction(vars.nftAddress, tid, bid, inc).call()
+    console.log(val)
+    const auctions = await auctionFactoryContract.methods.getAuctions().call()
+    console.log(auctions)
+    // console.log(auctionFactoryContract.methods)
+    // props.setTrigger(false)
   }
 
   return (props.trigger) ? (

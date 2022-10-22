@@ -23,4 +23,11 @@ contract AuctionFactory {
         auctions.push(auction);
         emit ContractCreated(address(auction));
     }
+
+    function getAuctions() external view returns (Auction[] memory _auctions) {
+        _auctions = new Auction[](auctions.length);
+        for (uint i = 0; i < auctions.length; i++) {
+            _auctions[i] = auctions[i];
+        }
+    }
 }
