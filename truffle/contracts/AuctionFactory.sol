@@ -8,14 +8,14 @@ contract AuctionFactory {
     event ContractCreated(address newContractAddress);
 
     function createNewAuction(
-        IERC721 _nft,
-        uint _nftId,
-        uint _startingBid,
-        uint _increment
+        address _nft,
+        uint256 _nftId,
+        uint256 _startingBid,
+        uint256 _increment
     ) public {
         Auction auction = new Auction(
             msg.sender,
-            _nft,
+            IERC721(_nft),
             _nftId,
             _startingBid,
             _increment

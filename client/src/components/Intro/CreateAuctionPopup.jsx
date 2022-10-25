@@ -43,14 +43,11 @@ const CreateAuctionPopup = (props) =>{
     const tid = parseInt(vars.nftId)
     const bid = parseInt(vars.startingBid)
     const inc = parseInt(vars.increment)
-    console.log(vars.nftAddress)
-    console.log(auctionFactoryContract.methods)
-
-    let val = await auctionFactoryContract.methods.createNewAuction(vars.nftAddress, tid, bid, inc).call()
-    console.log(val)
+    let val = await auctionFactoryContract.methods.createNewAuction(vars.nftAddress, tid, bid, inc).send({from: accounts[0]})
+    let deployedAddress = val.events.ContractCreated.returnValues.newContractAddress
+    console.log("val: ", deployedAddress)
     const auctions = await auctionFactoryContract.methods.getAuctions().call()
     console.log(auctions)
-    // console.log(auctionFactoryContract.methods)
     // props.setTrigger(false)
   }
 
