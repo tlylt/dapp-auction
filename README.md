@@ -126,3 +126,9 @@ One possible solution is to use the SafeMath library. However, the SafeMath libr
 > */
 
 Our auction contract uses Solidity 0.8.0, which has built-in overflow checking. Therefore, we do not need to use the SafeMath library.
+
+
+## Credits
+
+- Image
+- Beeple, Everydays: The First 5000 Days. Sold for: $69.3 million Beeple/Christie’s
