@@ -1,4 +1,4 @@
-#App {
+#Auction {
   width: 100%;
   height: 100%;
   display: flex;
@@ -13,7 +13,7 @@
   --dark-gray: #777;
 }
 
-#App .container {
+#Auction .container {
   width: 40%;
   min-width: 60rem;
   max-width: 75rem;
@@ -84,21 +84,21 @@ hr {
   margin: 4rem 0;
 }
 
-#App .container .welcome h1 {
+#Auction .container .welcome h1 {
   padding-top: 7.5rem;
   font-size: 2.6rem;
 }
 
-#App .container .demo .contract-container {
+#Auction .container .demo .contract-container {
   display: flex;
 }
 
-#App .container .demo .contract-container code {
+#Auction .container .demo .contract-container code {
   min-width: 42rem;
   border-radius: 1rem 0 0 1rem;
 }
 
-#App .container .demo .contract-container .btns {
+#Auction .container .demo .contract-container .btns {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -109,7 +109,7 @@ hr {
   border-radius: 0 1rem 1rem 0;
 }
 
-#App .container .demo .contract-container .btns>* {
+#Auction .container .demo .contract-container .btns > * {
   width: 12rem;
   display: flex;
   align-items: center;
@@ -122,22 +122,22 @@ hr {
   cursor: pointer;
 }
 
-#App .container .demo .contract-container .btns>*:hover {
+#Auction .container .demo .contract-container .btns > *:hover {
   background-color: var(--dark-gray);
 }
 
-#App .container .demo .contract-container .btns .input-btn input {
+#Auction .container .demo .contract-container .btns .input-btn input {
   width: 4rem;
   text-align: center;
   font-family: monospace;
   font-size: 1.2rem;
 }
 
-#App .container footer {
+#Auction .container footer {
   padding-bottom: 7.5rem;
 }
 
-#App .container footer a {
+#Auction .container footer a {
   display: inline-block;
   margin: 2rem 1rem 0 0;
 }
