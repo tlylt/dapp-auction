@@ -4,10 +4,25 @@ import { useEth } from '../../contexts/EthContext';
 import './CreateAuctionPopup.css'
 
 const CreateAuctionPopup = (props) =>{
+  const [auctionCreated, setAuctionCreated] = useState(false);
+  const [deployedAddress, setDeployedAddress] = useState("");
+
+  return (props.trigger) ? (
+    <div className="auction-popup">
+      <div className="inner-auction-popup">
+        <Button className="close-btn" onClick={()=>props.setTrigger(false)}>close</Button>
+        <AuctionPopupContent auctionCreated={auctionCreated} setAuctionCreated={setAuctionCreated} deployedAddress={deployedAddress} setDeployedAddress={setDeployedAddress}>
+          {props.children}
+        </AuctionPopupContent>
+      </div>
+    </div>
+  ) : "";
+}
+
+const AuctionPopupContent = (props) =>{
   const { state: { web3, networkID, accounts}} = useEth();
   const auctionJson = require('../../contracts/AuctionFactory.json');
   let auctionFactoryContract;
-
 
   const [vars, setVars] = useState({
     nftAddress: "",
@@ -15,6 +30,7 @@ const CreateAuctionPopup = (props) =>{
     startingBid: 0,
     increment: 0,
   })
+
   const handleAddressInput = (event) => {
     setVars({
       ...vars, nftAddress: event.target.value
@@ -38,23 +54,20 @@ const CreateAuctionPopup = (props) =>{
 
   const handleCreate = async () => {
     let auctionAddress = auctionJson.networks[networkID].address
-    // console.log(typeof(auctionAddress))
     auctionFactoryContract = new web3.eth.Contract(auctionJson.abi, auctionAddress)
     const tid = parseInt(vars.nftId)
     const bid = parseInt(vars.startingBid)
     const inc = parseInt(vars.increment)
     let val = await auctionFactoryContract.methods.createNewAuction(vars.nftAddress, tid, bid, inc).send({from: accounts[0]})
-    let deployedAddress = val.events.ContractCreated.returnValues.newContractAddress
-    console.log("val: ", deployedAddress)
-    const auctions = await auctionFactoryContract.methods.getAuctions().call()
-    console.log(auctions)
-    // props.setTrigger(false)
+    let add = val.events.ContractCreated.returnValues.newContractAddress
+    props.setDeployedAddress(add)
+    props.setAuctionCreated(true)
   }
 
-  return (props.trigger) ? (
-    <div className="auction-popup">
-      <div className="inner-auction-popup">
-        <Button className="close-btn" onClick={()=>props.setTrigger(false)}>close</Button>
+  return (props.auctionCreated) 
+    ? "Auction deployed at address: " + props.deployedAddress
+    : (
+      <div>
         {props.children}
         <form className="create-auction-form">
           <input
@@ -84,8 +97,7 @@ const CreateAuctionPopup = (props) =>{
         </form>
         <Button className="create-auction" onClick={handleCreate}>Create Auction</Button>
       </div>
-    </div>
-  ) : "";
+      )
 }
 
 export default CreateAuctionPopup;
