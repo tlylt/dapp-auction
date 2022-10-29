@@ -7,6 +7,7 @@ import { EthProvider } from './contexts/EthContext';
 
 import ConnectWallet from './components/Intro/ConnectWallet';
 import CreateAuction from './components/Intro/CreateAuction';
+import NftApprovalCard from './components/Intro/NftApprovalCard';
 
 function Auction() {
   return (
@@ -19,6 +20,7 @@ function Auction() {
           <div id="AuctionButton">
             <CreateAuction />
           </div>
+          <NftApprovalCard></NftApprovalCard>
           <Intro />
           <hr />
           <Setup />
