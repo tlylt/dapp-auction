@@ -1,10 +1,13 @@
 # DApp - Auction
 
 # Setup Instructions
+
 The project is setup using the Truffle suite for Ethereum, using Ganache to run a local blockchain. The project is also setup using React, and uses the React Truffle box to interact with deployed smart contracts on the Ethereum blockchain from a React web app.
 
 ## Install Truffle Suite
+
 1. Install Truffle and Ganache globally
+
 ```
 npm i -g truffle ganache
 ```
@@ -16,9 +19,8 @@ npm i -g truffle ganache
 4. Check the port it is running on (7545 if Ganache Desktop or 8545 if Ganache CLI, by default), then edit `truffle-config.js` (`networks/development`) to match the port. If on Ganache Desktop, change the default port to 8545
 
 5. On MetaMask, connect to your local blockchain (localhost:8545). Import an account from Ganache to MetaMask. You can copy the private key from Ganache (`Show Key` in `Accounts` tab in Ganache Desktop) and import it into MetaMask.
-   
-6. 
-Deploy the smart contracts (if any changes) to the local blockchain. You can double check contract is deployed in Ganache Desktop > `Contracts` tab
+6. Deploy the smart contracts (if any changes) to the local blockchain. You can double check contract is deployed in Ganache Desktop > `Contracts` tab
+
 ```
 // Ganache CLI
 cd truffle
@@ -27,6 +29,7 @@ truffle migrate --network development
 ```
 
 5. Start the React web app
+
 ```
 cd client
 npm install
@@ -36,31 +39,50 @@ npm start
 ## Minting NFT
 
 ### Instructions
+
 First we need to obtain the ipfs hash for the nft metadata that you want
+
 1. Navigate into client. Find a picture or gif that you like and save it into client/assets together with "octo.gif" and "octopus.jpg"
 2. Open client/data/metadata.json. Change the name, description and attributes to your liking. The image link does not matter.
-3. Edit runScript.js in client/scripts by editting line 6 imgPath to be: const filePath = path.join(__dirname, "../assets/{your file name}.{filetype}")
+3. Edit runScript.js in client/scripts by editting line 6 imgPath to be: const filePath = path.join(\_\_dirname, "../assets/{your file name}.{filetype}")
 4. Run runScript.js
+
 ```
    node scripts/runScipt.js
 ```
+
 5. To view the pinned object, browse: https://gateway.pinata.cloud/ipfs/{your_IpfsHash}. Your ipfsHash can be obtained from the last entry in ipfsHash.json
-Congratulations, you have no successfully pinned the nft metadata that you want.
+   Congratulations, you have no successfully pinned the nft metadata that you want.
 
 Now we need to mint an NFT using the metadata you have just created. We do this in the Goerli Testnet as our contract has already been deployed there.
+
 1. First you need some GoerliETH to mint NFT on the network. Go to https://goerli-faucet.pk910.de/ to mine some test ethers.
 2. Navigate into from the folder root ./truffle on your cmdln and open the truffle console and key in the following commands.
+
 ```
    cd truffle
-   npx truffle console --network goerli
+   npx truffle console --network development
    const nft = await MintNFT.deployed()   //returns undefined
-   nft.address // returns '0x60dd627e671F65b8cDFaf39AA0FB6b00ae1C18D6' - contract is deployed onto this address
+   nft.address // address where MintNFT contract is deployed to. Record this down for later
    // Once the above are confirmed, you can mine your nft
-   await nft.mint('https://gateway.pinata.cloud/ipfs/{ipfsHash}') // This ipfsHash should be from step 8 previously. Once minted, check your token id from the transaction information "type".
-   await nft.ownerOf({token id}) // token id obtained from the previous step "type", this command should return your metamask address
+   let res = await nft.mint('https://gateway.pinata.cloud/ipfs/{ipfsHash}') // ipfsHash is from step 5 previously
+   let tokenId = res.receipt.logs[0].args.tokenId.words[0] // the NFT token ID. Record this down for later
+
+   await nft.ownerOf({token id}) // token id obtained from the previous step "type", this command should return your metamask address.
 ```
+
 3. You have now successfully minted your nft. View the nft at: https://testnets.opensea.io/assets/goerli/0x60dd627e671F65b8cDFaf39AA0FB6b00ae1C18D6/{your_token_id}
 
+## Auction Your Minted NFT
+
+1. Follow the previous section and note down the returned
+   - nft.address
+   - token id
+2. Make sure you know which chain you minted your NFT on before proceeding. Our frontend queries the local Ganache development network by default, and will NOT work if your NFT was minted on other test networks
+3. Press Create Auction, and fill in the form fields as below
+   - NFT Address --> nft.address
+   - NFT Token Id --> token id
+   - Starting Bid / Increment --> as desired
 
 ## Smart Contract Design
 
@@ -99,7 +121,6 @@ What is a reentrancy attack?
 
 > A reentrancy attack occurs when a function makes an external call to another untrusted contract.
 > Then the untrusted contract makes a recursive call back to the original function in an attempt to drain funds.
-> 
 
 How to prevent reentrancy attack?
 
@@ -118,17 +139,19 @@ Resources:
 Mathematical operations in Solidity are subject to overflow and underflow bugs. These bugs can be exploited to drain funds from a contract.
 
 One possible solution is to use the SafeMath library. However, the SafeMath library is not used in this project as stated in the comment:
-> /**
-> * @dev Wrappers over Solidity's arithmetic operations.
-> *
-> * NOTE: `SafeMath` is generally not needed starting with Solidity 0.8, since the compiler
-> * now has built in overflow checking.
-> */
+
+> /\*\*
+>
+> - @dev Wrappers over Solidity's arithmetic operations.
+> -
+> - NOTE: `SafeMath` is generally not needed starting with Solidity 0.8, since the compiler
+> - now has built in overflow checking.
+>   \*/
 
 Our auction contract uses Solidity 0.8.0, which has built-in overflow checking. Therefore, we do not need to use the SafeMath library.
-
 
 ## Credits
 
 Images:
+
 - Beeple, Everydays: The First 5000 Days. Sold for: $69.3 million Beeple/Christie’s

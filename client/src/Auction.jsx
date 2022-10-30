@@ -1,13 +1,13 @@
 import './Auction.css';
 import Demo from './components/Demo';
+import AuctionListings from "./components/Demo/AuctionListings";
 import Footer from './components/Footer';
 import Intro from './components/Intro/';
-import Setup from './components/Setup';
-import { EthProvider } from './contexts/EthContext';
-
 import ConnectWallet from './components/Intro/ConnectWallet';
 import CreateAuction from './components/Intro/CreateAuction';
 import NftApprovalCard from './components/Intro/NftApprovalCard';
+import Setup from './components/Setup';
+import { EthProvider } from './contexts/EthContext';
 
 function Auction() {
   return (
@@ -21,6 +21,9 @@ function Auction() {
             <CreateAuction />
           </div>
           <NftApprovalCard></NftApprovalCard>
+          <div id="AuctionListings">
+            <AuctionListings />
+          </div>
           <Intro />
           <hr />
           <Setup />

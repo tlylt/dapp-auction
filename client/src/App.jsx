@@ -1,6 +1,6 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Auction from './Auction';
-import Landing from './Landing';
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Auction from "./Auction";
+import Landing from "./Landing";
 
 function App() {
   return (
