@@ -3,7 +3,7 @@ import Modal from "@material-ui/core/Modal";
 import TextField from "@material-ui/core/TextField";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import * as React from "react";
+import React, { useEffect, useState } from "react";
 import CountdownTimer from "./CountdownTimer";
 
 const style = {
@@ -18,10 +18,44 @@ const style = {
   p: 4,
 };
 
+function calculateTimeTillExpiry(auctionInfo) {
+  const expiryTime = auctionInfo.endAt;
+  const currentTime = Math.floor(Date.now() / 1000);
+  const timeTillExpiryInSeconds = expiryTime - currentTime;
+
+  return {
+    timeTillExpiryMinutes: Math.floor(timeTillExpiryInSeconds / 60),
+    timeTillExpirySeconds: timeTillExpiryInSeconds % 60,
+  };
+}
+
+function calculateStatus(auctionInfo) {
+  return auctionInfo.started
+    ? "Started"
+    : auctionInfo.ended
+    ? "Ended"
+    : "Not Started";
+}
+
 function NFTListingBidModal(props) {
-  const { pinataMetadata } = props;
-  const { highestBid, setHighestBid } = React.useState(0);
-  const { timeTillExpiry, setTimeTillExpiry } = React.useState(0);
+  const { pinataMetadata, auctionInfo, auctionContract } = props;
+  const [highestBid, setHighestBid] = useState(auctionInfo.highestBid);
+  const { timeTillExpiryMinutes, timeTillExpirySeconds } =
+    calculateTimeTillExpiry(auctionInfo);
+  const status = calculateStatus(auctionInfo);
+
+  useEffect(() => {
+    setHighestBid(auctionInfo.highestBid);
+  }, [auctionInfo, setHighestBid]);
+
+  useEffect(() => {
+    if (auctionContract !== null) {
+      auctionContract.events.Bid({}, (err, res) => {
+        setHighestBid(parseInt(res.args.amount));
+      });
+    }
+  }, [auctionContract, setHighestBid]);
+
   return (
     <Modal open={props.open} onClose={props.onClose}>
       <Box sx={style}>
@@ -29,11 +63,17 @@ function NFTListingBidModal(props) {
           {pinataMetadata.name}
         </Typography>
         <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+          Status: {status}
+        </Typography>
+        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
           Highest Bid: {highestBid}
         </Typography>
         <Typography id="modal-modal-description" sx={{ mt: 2 }}>
           Time Till Expiry:
-          <CountdownTimer initialMinute={2} initialSecond={10} />
+          <CountdownTimer
+            initialMinute={timeTillExpiryMinutes}
+            initialSecond={timeTillExpirySeconds}
+          />
         </Typography>
         <hr />
         <TextField

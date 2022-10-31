@@ -1,5 +1,4 @@
 import { CircularProgress } from "@material-ui/core";
-import Button from "@material-ui/core/Button";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 import ListSubheader from "@mui/material/ListSubheader";
@@ -79,15 +78,25 @@ async function populateAuctionListings(
       auctionContractJson.abi,
       auctionContractAddress
     );
-    const nftId = parseInt(await auctionContract.methods.nftId().call());
 
     // TODO - Enforce min bid increment - highestBid, increment
     // TODO - Update highest bid by listening for emitted Bid events
     // TODO - Submit bid via payable Auction.bid()
     // TODO - NFT Listing has different image sizes - standardize via css
     const info = await auctionContract.methods.info().call();
-    console.log(info);
-    debugger;
+    const auctionInfo = {};
+    auctionInfo.seller = info[0];
+    auctionInfo.highestBidder = info[1];
+    auctionInfo.startAt = parseInt(info[2]);
+    auctionInfo.duration = parseInt(info[3]);
+    auctionInfo.endAt = parseInt(info[4]);
+    auctionInfo.increment = parseInt(info[5]);
+    auctionInfo.highestBid = parseInt(info[6]);
+    auctionInfo.nftId = parseInt(info[7]);
+    auctionInfo.senderBid = parseInt(info[8]);
+    auctionInfo.started = info[9];
+    auctionInfo.ended = info[10];
+    console.log(auctionInfo);
 
     const mintNftContractAddress = await auctionContract.methods.nft().call();
     const mintNftContract = new web3.eth.Contract(
@@ -95,10 +104,12 @@ async function populateAuctionListings(
       mintNftContractAddress
     );
     const pinataImageUri = await mintNftContract.methods
-      ._tokenURIs(nftId)
+      .tokenURI(auctionInfo.nftId)
       .call();
     const pinataMetadata = imageUriMetadataMap[pinataImageUri];
     const auction = {
+      auctionContract: auctionContract,
+      auctionInfo: auctionInfo,
       pinataImageUri: pinataImageUri,
       pinataMetadata: pinataMetadata,
     };
@@ -129,6 +140,31 @@ function AuctionListings() {
     });
   }, []);
 
+  // Load our auction listings when the auction factory contract is ready
+  // Re-render the listings whenever a new auction is created
+  useEffect(() => {
+    if (
+      web3 !== null &&
+      auctionFactoryContract !== null &&
+      imageUriMetadataMap !== null
+    ) {
+      populateAuctionListings(
+        web3,
+        auctionFactoryContract,
+        imageUriMetadataMap,
+        setAuctionListings
+      );
+      auctionFactoryContract.events.ContractCreated({}, (err, res) => {
+        populateAuctionListings(
+          web3,
+          auctionFactoryContract,
+          imageUriMetadataMap,
+          setAuctionListings
+        );
+      });
+    }
+  }, [web3, auctionFactoryContract, imageUriMetadataMap, setAuctionListings]);
+
   if (
     web3 == null ||
     auctionFactoryContract == null ||
@@ -137,28 +173,10 @@ function AuctionListings() {
     return <CircularProgress />;
   }
 
-  if (auctionListings.length === 0) {
-    return (
-      <Button
-        variant="contained"
-        onClick={() =>
-          populateAuctionListings(
-            web3,
-            auctionFactoryContract,
-            imageUriMetadataMap,
-            setAuctionListings
-          )
-        }
-      >
-        Get Auctions
-      </Button>
-    );
-  }
-
   return (
     <ImageList sx={{ width: 500, height: 450 }}>
       <ImageListItem key="Subheader" cols={2}>
-        <ListSubheader component="div">NFT Listings</ListSubheader>
+        <ListSubheader component="div">Auction Listings</ListSubheader>
       </ImageListItem>
       {auctionListings.map((auction, _index) => (
         <AuctionListing key={auction.pinataImageUri} auction={auction} />

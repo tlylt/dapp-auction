@@ -14,7 +14,7 @@ function handleCloseBidModal(setIsBidModalOpen) {
 }
 
 function AuctionListing(props) {
-  const { pinataMetadata } = props.auction;
+  const { auctionContract, pinataMetadata, auctionInfo } = props.auction;
   const [isBidModalOpen, setIsBidModalOpen] = React.useState(false);
   return (
     <div>
@@ -41,6 +41,8 @@ function AuctionListing(props) {
         <NFTListingBidModal
           open={isBidModalOpen}
           onClose={handleCloseBidModal}
+          auctionContract={auctionContract}
+          auctionInfo={auctionInfo}
           pinataMetadata={pinataMetadata}
         />
       )}
