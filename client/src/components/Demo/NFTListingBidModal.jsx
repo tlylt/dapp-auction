@@ -5,6 +5,9 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
 import CountdownTimer from "./CountdownTimer";
+import { useState } from "react";
+import { useEth } from '../../contexts/EthContext';
+
 
 const style = {
   position: "absolute",
@@ -18,13 +21,66 @@ const style = {
   p: 4,
 };
 
+const test = async (things) =>{
+  console.log("here")
+  let auctionContract = things.auctionContract
+  let info = await auctionContract.methods.info().call()
+  console.log(info)
+} 
+
+
+
 function NFTListingBidModal(props) {
+  const { state: { accounts } } = useEth();
+
   const { pinataMetadata } = props;
-  const { highestBid, setHighestBid } = React.useState(0);
-  const { timeTillExpiry, setTimeTillExpiry } = React.useState(0);
+  const { ...auctionData } = props.auctionData;
+  const [ highestBid, setHighestBid] = useState(auctionData.highestBid);
+  const [ timeTillExpiry, setTimeTillExpiry ] = useState(0);
+  const [ currBidAmount, setCurrBidAmount ] = useState(0);
+  const [ duration, setDuration ] = useState(0);
+
+  const handleBidAmountChange = (event) => {
+    setCurrBidAmount(event.target.value)
+  }
+
+  const handleDurationChange = (event) => {
+    setDuration(event.target.value)
+  }
+
+  const submitBid = async() =>{
+    // Handle bidding
+    // User bid amount is lower than highestBid or less than increment
+    if (currBidAmount < highestBid){
+
+    } else if (currBidAmount-highestBid < auctionData.increment) {
+
+    }
+    let sendAmount = currBidAmount - auctionData.userBidAmount
+
+    const auctionContract = auctionData.auctionContract
+    try {
+      let res = await auctionContract.methods.bid().send({ from: accounts[0], value: sendAmount})
+    } catch(err){
+      console.log(err)
+    }
+  }
+
+  const handleStartAuction = async() => {
+    const auctionContract = auctionData.auctionContract
+    try {
+      await auctionContract.methods.start(duration).send({ from: accounts[0] })
+      console.log("auction started :D")
+    } catch(err){
+      console.log(err)
+    }
+  }
+
   return (
-    <Modal open={props.open} onClose={props.onClose}>
+    <Modal open={props.open}>
       <Box sx={style}>
+        <Button onClick={() => props.onClose(false)}>Close</Button>
+        <Button onClick={() => test(auctionData)}>Print auction info</Button>
         <Typography id="modal-modal-title" variant="h6" component="h2">
           {pinataMetadata.name}
         </Typography>
@@ -38,11 +94,25 @@ function NFTListingBidModal(props) {
         <hr />
         <TextField
           id="modal-bid"
+          label="Start time (unix)"
+          type="number"
+          variant="outlined"
+          onChange={handleDurationChange}
+        />
+        <Button variant="contained" onClick={handleStartAuction}> Start </Button>
+        <br/>
+        <TextField
+          id="modal-bid"
           label="My Bid (GWei)"
           type="number"
           variant="outlined"
+          onChange={handleBidAmountChange}
         />
-        <Button variant="contained">Submit Bid</Button>
+        <Button variant="contained" onClick={submitBid}>Submit Bid </Button>
+        <br/>
+        <Button variant="contained"> Withdraw </Button>
+        <br/>
+        <Button variant="contained"> End </Button>
       </Box>
     </Modal>
   );

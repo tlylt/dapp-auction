@@ -52,20 +52,16 @@ contract Auction is ReentrancyGuard {
         nftId = _nftId;
     }
 
-    function start(uint256 _duration, uint256 _startTime) external {
+    function start(uint256 _duration) external {
         require(!started, "Auction already started!");
         require(msg.sender == seller, "You are not the owner of this auction!");
-        require(
-            _startTime >= block.timestamp,
-            "Auction cannot start in the past!"
-        );
         require(_duration > 0, "Duration must be greater than 0!");
 
         nft.transferFrom(msg.sender, address(this), nftId);
         started = true;
-        startAt = _startTime;
+        startAt = block.timestamp;
         duration = _duration;
-        endAt = _startTime + _duration;
+        endAt = startAt + _duration;
 
         emit Start();
     }

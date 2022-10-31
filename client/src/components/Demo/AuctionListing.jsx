@@ -40,8 +40,9 @@ function AuctionListing(props) {
       {isBidModalOpen && (
         <NFTListingBidModal
           open={isBidModalOpen}
-          onClose={handleCloseBidModal}
+          onClose={setIsBidModalOpen}
           pinataMetadata={pinataMetadata}
+          auctionData={props.auction}
         />
       )}
     </div>

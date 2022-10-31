@@ -87,7 +87,7 @@ async function populateAuctionListings(
     // TODO - NFT Listing has different image sizes - standardize via css
     const info = await auctionContract.methods.info().call();
     console.log(info);
-    debugger;
+    // debugger;
 
     const mintNftContractAddress = await auctionContract.methods.nft().call();
     const mintNftContract = new web3.eth.Contract(
@@ -95,12 +95,25 @@ async function populateAuctionListings(
       mintNftContractAddress
     );
     const pinataImageUri = await mintNftContract.methods
-      ._tokenURIs(nftId)
+      .tokenURI(nftId)
       .call();
     const pinataMetadata = imageUriMetadataMap[pinataImageUri];
+    // console.log(pinataImageUri, imageUriMetadataMap)
     const auction = {
       pinataImageUri: pinataImageUri,
       pinataMetadata: pinataMetadata,
+      seller: info[0],
+      highestBidder: info[1],
+      startAt: parseInt(info[2]),
+      duration: parseInt(info[3]),
+      endAt: parseInt(info[4]),
+      increment: parseInt(info[5]),
+      highestBid: parseInt(info[6]),
+      nftId: parseInt(info[7]),
+      userBidAmount: parseInt(info[8]),
+      started: info[9],
+      ended: info[10],
+      auctionContract: auctionContract
     };
     auctionListings.push(auction);
   }
