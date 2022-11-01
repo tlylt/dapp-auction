@@ -34,24 +34,22 @@ function NFTListingBidModal(props) {
 
   const { pinataMetadata } = props;
   const { ...auctionData } = props.auctionData;
-  const [highestBid, setHighestBid] = useState(auctionData.highestBid);
-  const [timeTillExpiry, setTimeTillExpiry] = useState(0);
-  const [currBidAmount, setCurrBidAmount] = useState(0);
-  const [duration, setDuration] = useState(0);
+  const [ highestBid, setHighestBid] = useState(auctionData.highestBid);
+  const [ timeTillExpiry, setTimeTillExpiry ] = useState(0);
+  const [ currBidAmount, setCurrBidAmount ] = useState(0);
 
   const handleBidAmountChange = (event) => {
     setCurrBidAmount(event.target.value);
   };
 
-  const handleDurationChange = (event) => {
-    setDuration(event.target.value);
-  };
 
   const submitBid = async () => {
     // Handle bidding
     // User bid amount is lower than highestBid or less than increment
     if (currBidAmount < highestBid) {
-    } else if (currBidAmount - highestBid < auctionData.increment) {
+      // some notification
+    } else if (currBidAmount - highestBid < auctionData.increment && accounts[0] !== auctionData.highestBidder) {
+      // some notification
     }
     let sendAmount = currBidAmount - auctionData.userBidAmount;
 
@@ -68,12 +66,30 @@ function NFTListingBidModal(props) {
   const handleStartAuction = async () => {
     const auctionContract = auctionData.auctionContract;
     try {
-      await auctionContract.methods.start(duration).send({ from: accounts[0] });
-      console.log('auction started :D');
-    } catch (err) {
-      console.log(err);
+      await auctionContract.methods.start().send({ from: accounts[0] })
+      console.log("auction started :D")
+    } catch(err){
+      console.log(err)
     }
   };
+
+  const handleWithdraw = async() => {
+    const auctionContract = auctionData.auctionContract
+    try {
+      await auctionContract.methods.withdraw().send({ from: accounts[0] })
+    } catch(err){
+      console.log(err)
+    }
+  }
+
+  const handleEnd = async() => {
+    const auctionContract = auctionData.auctionContract
+    try {
+      await auctionContract.methods.end().send({ from: accounts[0] })
+    } catch(err){
+      console.log(err)
+    }
+  }
 
   return (
     <Modal open={props.open}>
@@ -91,13 +107,6 @@ function NFTListingBidModal(props) {
           <CountdownTimer initialMinute={2} initialSecond={10} />
         </Typography>
         <hr />
-        <TextField
-          id="modal-bid"
-          label="Start time (unix)"
-          type="number"
-          variant="outlined"
-          onChange={handleDurationChange}
-        />
         <Button variant="contained" onClick={handleStartAuction}>
           {' '}
           Start{' '}
@@ -114,9 +123,9 @@ function NFTListingBidModal(props) {
           Submit Bid{' '}
         </Button>
         <br />
-        <Button variant="contained"> Withdraw </Button>
+        <Button variant="contained" onClick={handleWithdraw}> Withdraw </Button>
         <br />
-        <Button variant="contained"> End </Button>
+        <Button variant="contained" onClick={handleEnd}> End </Button>
       </Box>
     </Modal>
   );

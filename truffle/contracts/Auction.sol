@@ -50,6 +50,8 @@ contract Auction is ReentrancyGuard {
         seller = payable(sender);
         highestBid = _startingBid;
         increment = _increment;
+        duration = _duration;
+
         nft = _nft;
         nftId = _nftId;
         duration = _duration;
@@ -107,6 +109,7 @@ contract Auction is ReentrancyGuard {
         require(started, "Auction not started!");
         require(!ended, "Auction ended!");
         require(block.timestamp < endAt, "Auction ended!");
+        require(msg.sender != seller, "You are the seller!");
         if (highestBidder != address(0)) {
             // only check if this is NOT the first offer
             // as the msg.value in first offer represents the starting bid
