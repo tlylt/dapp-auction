@@ -5,6 +5,8 @@ import ReactDOM from "react-dom/client";
 import App from "./App";
 import "./index.css";
 import { HelmetProvider } from "react-helmet-async";
+import ThemeProvider from './theme/ThemeProvider';
+import { SnackbarProvider } from 'notistack';
 
 require("dotenv").config();
 
@@ -16,9 +18,13 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <Web3ReactProvider getLibrary={getLibrary}>
-      <HelmetProvider>
-        <App />
-      </HelmetProvider>
+      <ThemeProvider>
+        <SnackbarProvider maxSnack={3}>
+          <HelmetProvider>
+            <App />
+          </HelmetProvider>
+        </SnackbarProvider>
+      </ThemeProvider>
     </Web3ReactProvider>
   </React.StrictMode>
 );

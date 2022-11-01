@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
   mid: {
     textAlign: 'center',
     color: 'white',
-    fontSize: '2rem',
+    fontSize: '1rem',
   },
 }));
 export default function Landing() {

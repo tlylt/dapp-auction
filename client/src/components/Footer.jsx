@@ -1,17 +1,46 @@
-function Link({ uri, text }) {
-  return <a href={uri} target="_blank" rel="noreferrer">{text}</a>;
-}
+import * as React from 'react';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
+import Link from '@mui/material/Link';
 
-function Footer() {
+function Copyright() {
   return (
-    <footer>
-      <h2>More resources</h2>
-      <Link uri={"https://trufflesuite.com"} text={"Truffle"} />
-      <Link uri={"https://reactjs.org"} text={"React"} />
-      <Link uri={"https://soliditylang.org"} text={"Solidity"} />
-      <Link uri={"https://ethereum.org"} text={"Ethereum"} />
-    </footer >
+    <Typography variant="body1" color="text.secondary">
+      {'Copyright © '}
+      {new Date().getFullYear()}{' '}
+      <Link color="inherit" href="https://github.com/tlylt/dapp-auction">
+        Team NFT, CZ4153-BLOCKCHAIN TECHNOLOGY NTU
+      </Link>
+    </Typography>
   );
 }
 
-export default Footer;
+export default function Footer() {
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: '100vh',
+      }}
+    >
+      <Box
+        component="footer"
+        sx={{
+          py: 3,
+          px: 2,
+          mt: 'auto',
+          backgroundColor: (theme) => theme.palette.grey[100],
+        }}
+      >
+        <Container maxWidth="sm">
+          <Typography variant="h5">
+            Decentralized Auction Application for NFTs
+          </Typography>
+          <Copyright />
+        </Container>
+      </Box>
+    </Box>
+  );
+}

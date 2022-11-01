@@ -1,0 +1,11 @@
+{
+    "name": "Mad Dog Jones",
+    "description": "Mad Dog Jones, REPLICATOR (2021)",
+    "image": "",
+    "attributes": [
+        {
+            "trait_type": "Age",
+            "value": "105"
+        }
+    ]
+}
