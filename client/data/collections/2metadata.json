@@ -1,0 +1,11 @@
+{
+    "name": "Censored",
+    "description": "Censored, an NFT collection by Pak and Julian Assange.",
+    "image": "",
+    "attributes": [
+        {
+            "trait_type": "Age",
+            "value": "105"
+        }
+    ]
+}

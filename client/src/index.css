@@ -1,46 +1,28 @@
-html {
-  font-size: 10px;
-  font-family: sans-serif;
-}
-
-* {
-  margin: 0;
-  padding: 0;
-}
-
-#Auction {
-  width: 100vw;
-  height: 100vh;
-}
-
-#ConnectWallet {
-  position: absolute;
-  top: 30px;
-  right: 30px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-#ConnectWallet button {
-  background-color: #3f50b5;
+.scrollToTopBtn {
+  background-color: aquamarine;
+  border: none;
+  border-radius: 50%;
   color: white;
-  font-weight: bold;
-  width: 350px;
-}
-
-#AuctionButton {
-  position: absolute;
-  top: 80px;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 48px;
+  width: 48px;
+  cursor: pointer;
+  /* place it at the bottom right corner */
+  position: fixed;
+  bottom: 30px;
   right: 30px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  /* keep it at the top of everything else */
+  z-index: 100;
+  /* hide with opacity */
+  opacity: 0;
+  /* also add a translate effect */
+  transform: translateY(100px);
+  /* and a transition */
+  transition: all 0.5s ease;
 }
 
-#AuctionButton button {
-  background-color: #3f50b5;
-  color: white;
-  font-weight: bold;
-  width: 350px;
+.showBtn {
+  opacity: 1;
+  transform: translateY(0);
 }
