@@ -80,7 +80,7 @@ function NFTListingBidModal(props) {
     } catch(err){
       console.log(err)
     }
-  }
+  };
 
   const handleEnd = async() => {
     const auctionContract = auctionData.auctionContract
@@ -89,7 +89,7 @@ function NFTListingBidModal(props) {
     } catch(err){
       console.log(err)
     }
-  }
+  };
 
   return (
     <Modal open={props.open}>
