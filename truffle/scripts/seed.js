@@ -59,7 +59,7 @@ module.exports = async function (callback) {
             await mintNFT.approve(user.auctionAddress, user.tokenId, { from: user.account })
         }
 
-        // Log out the demo users
+        // Print out the demo users
         console.log("These are the demo users:\n")
         console.log(demoUsers)
     }
