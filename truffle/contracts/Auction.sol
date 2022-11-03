@@ -41,31 +41,30 @@ contract Auction is ReentrancyGuard {
         IERC721 _nft,
         uint256 _nftId,
         uint256 _startingBid,
-        uint256 _increment
+        uint256 _increment,
+        uint256 _duration
     ) {
         require(_startingBid > 0, "Starting bid must be greater than 0!");
         require(_increment > 0, "Increment must be greater than 0!");
+        require(_duration > 0, "Duration must be greater than 0!");
         seller = payable(sender);
         highestBid = _startingBid;
         increment = _increment;
+        duration = _duration;
+
         nft = _nft;
         nftId = _nftId;
+        duration = _duration;
     }
 
-    function start(uint256 _duration, uint256 _startTime) external {
+    function start() external {
         require(!started, "Auction already started!");
         require(msg.sender == seller, "You are not the owner of this auction!");
-        require(
-            _startTime >= block.timestamp,
-            "Auction cannot start in the past!"
-        );
-        require(_duration > 0, "Duration must be greater than 0!");
 
         nft.transferFrom(msg.sender, address(this), nftId);
         started = true;
-        startAt = _startTime;
-        duration = _duration;
-        endAt = _startTime + _duration;
+        startAt = block.timestamp;
+        endAt = startAt + duration;
 
         emit Start();
     }
@@ -110,6 +109,7 @@ contract Auction is ReentrancyGuard {
         require(started, "Auction not started!");
         require(!ended, "Auction ended!");
         require(block.timestamp < endAt, "Auction ended!");
+        require(msg.sender != seller, "You are the seller!");
         if (highestBidder != address(0)) {
             // only check if this is NOT the first offer
             // as the msg.value in first offer represents the starting bid

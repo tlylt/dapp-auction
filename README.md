@@ -1,5 +1,41 @@
 # DApp - Auction
 
+## Seed
+
+```
+ganache
+cd truffle
+truffle migrate --network development
+truffle exec scripts/seed.js
+```
+
+## Quick Start
+
+```bash
+ganache
+# food object another carpet sausage shed reject elegant wheat satisfy aisle subject
+cd truffle
+truffle migrate --network development
+# auction factory address: 0x8227EF71284c48c4caAa15F26C9C1
+
+cd client
+node scripts/runScript.js
+# Save IPFS hash QmbFMke1KXqnYyBBWxB74N4c5SBnJMVAiMNRcGu6x1AwQH
+
+# Mint
+cd truffle
+npx truffle console --network development
+const nft = await MintNFT.deployed()  # returns undefined
+nft.address # address where MintNFT contract is deployed to. # 0xb981afF3030Fc2D019c1104243BdE7df0fDc36B6
+# Once the above are confirmed, you can mine your nft
+let res1 = await nft.mint('https://gateway.pinata.cloud/ipfs/QmXrB7rtEpXP5SSA2fTHUFcYG3MEg3gTTwKQPVsU4XUQS6')
+let tokenId = res1.receipt.logs[0].args.tokenId.words[0]
+tokenId // 1
+
+await nft.ownerOf(tokenId)
+# owner address 0x0a6EA4eE50c3fC7549E615cD0974c40a57a5330e
+```
+
 # Setup Instructions
 
 The project is setup using the Truffle suite for Ethereum, using Ganache to run a local blockchain. The project is also setup using React, and uses the React Truffle box to interact with deployed smart contracts on the Ethereum blockchain from a React web app.
@@ -48,11 +84,11 @@ First we need to obtain the ipfs hash for the nft metadata that you want
 4. Run runScript.js
 
 ```
-   node scripts/runScipt.js
+   node scripts/runScript.js
 ```
 
 5. To view the pinned object, browse: https://gateway.pinata.cloud/ipfs/{your_IpfsHash}. Your ipfsHash can be obtained from the last entry in ipfsHash.json
-   Congratulations, you have no successfully pinned the nft metadata that you want.
+   Congratulations, you have now successfully pinned the nft metadata that you want.
 
 Now we need to mint an NFT using the metadata you have just created. We do this in the Goerli Testnet as our contract has already been deployed there.
 

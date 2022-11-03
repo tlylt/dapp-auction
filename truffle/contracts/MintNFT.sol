@@ -15,7 +15,7 @@ contract MintNFT is Ownable, ERC721 {
     // Base URI
     string private _baseURIextended;
 
-    constructor() public ERC721("MintNFT", "MintNFT") {}
+    constructor() ERC721("MintNFT", "MintNFT") {}
 
     // https://forum.openzeppelin.com/t/function-settokenuri-in-erc721-is-gone-with-pragma-0-8-0/5978/3
     function setBaseURI(string memory baseURI_) external onlyOwner {

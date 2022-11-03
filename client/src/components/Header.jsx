@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     color: '#fff',
-    fontSize: '10rem',
+    fontSize: '8rem',
   },
   subtitle: {
     color: '#fff',
@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
   button: {
     color: 'darkslategrey',
     fontWeight: 'bold',
-    fontSize: '1.5rem',
+    fontSize: '1rem',
     backgroundColor: 'khaki',
   },
   goDown: {
