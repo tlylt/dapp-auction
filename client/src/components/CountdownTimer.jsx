@@ -1,11 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
 const CountdownTimer = (props) => {
-  const { initialHour = 0, initialMinute = 0, initialSeconds = 0 } = props;
+  const { initialHour = 0, initialMinute = 0, initialSecond = 0 } = props;
   const [hours, setHours] = useState(initialHour);
   const [minutes, setMinutes] = useState(initialMinute);
-  const [seconds, setSeconds] = useState(initialSeconds);
-
+  const [seconds, setSeconds] = useState(initialSecond);
   useEffect(() => {
     let myInterval = setInterval(() => {
       if (seconds > 0) {
@@ -36,9 +35,9 @@ const CountdownTimer = (props) => {
         <b>Expired</b>
       ) : (
         <b>
-          {hours.toString().padStart(2, '0')}:
-          {minutes.toString().padStart(2, '0')}:
-          {seconds.toString().padStart(2, '0')}
+          {hours.toString().padStart(2, "0")}:
+          {minutes.toString().padStart(2, "0")}:
+          {seconds.toString().padStart(2, "0")}
         </b>
       )}
     </span>

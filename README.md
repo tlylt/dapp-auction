@@ -22,9 +22,10 @@ cd client
 node scripts/runScript.js
 # Save IPFS hash QmbFMke1KXqnYyBBWxB74N4c5SBnJMVAiMNRcGu6x1AwQH
 
-# Mint
+# Mint NFT
 cd truffle
 npx truffle console --network development
+migrate # optional
 const nft = await MintNFT.deployed()
 nft.address # address where MintNFT contract is deployed to. # 0xb981afF3030Fc2D019c1104243BdE7df0fDc36B6
 # Once the above are confirmed, you can mine your nft
@@ -34,7 +35,9 @@ tokenId // 1
 
 await nft.ownerOf(tokenId)
 # owner address 0x0a6EA4eE50c3fC7549E615cD0974c40a57a5330e
-```
+
+# Approve Auction
+Approve the auction contract using its address in the dropdown list above and the `tokenId` from previously
 
 # Setup Instructions
 
