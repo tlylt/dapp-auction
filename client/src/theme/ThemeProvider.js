@@ -1,22 +1,22 @@
-import { useState, createContext, useEffect } from 'react';
-import { ThemeProvider } from '@mui/material';
-import { themeCreator } from './base';
-import { StylesProvider } from '@mui/styles';
+import { useState, createContext, useEffect } from "react";
+import { ThemeProvider } from "@mui/material";
+import { themeCreator } from "./base";
+import { StylesProvider } from "@mui/styles";
 
 export const ThemeContext = createContext((_themeName) => {});
 
 const ThemeProviderWrapper = (props) => {
-  const [themeName, _setThemeName] = useState('PureLightTheme');
+  const [themeName, _setThemeName] = useState("PureLightTheme");
 
   useEffect(() => {
     const curThemeName =
-      window.localStorage.getItem('appTheme') || 'PureLightTheme';
+      window.localStorage.getItem("appTheme") || "PureLightTheme";
     _setThemeName(curThemeName);
   }, []);
 
   const theme = themeCreator(themeName);
   const setThemeName = (themeName) => {
-    window.localStorage.setItem('appTheme', themeName);
+    window.localStorage.setItem("appTheme", themeName);
     _setThemeName(themeName);
   };
 

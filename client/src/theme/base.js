@@ -1,11 +1,11 @@
-import { PureLightTheme } from './schemes/PureLightTheme';
-import { GreyGooseTheme } from './schemes/GreyGooseTheme';
-import { PurpleFlowTheme } from './schemes/PurpleFlowTheme';
+import { PureLightTheme } from "./schemes/PureLightTheme";
+import { GreyGooseTheme } from "./schemes/GreyGooseTheme";
+import { PurpleFlowTheme } from "./schemes/PurpleFlowTheme";
 
 const themeMap = {
   PureLightTheme,
   GreyGooseTheme,
-  PurpleFlowTheme
+  PurpleFlowTheme,
 };
 
 export function themeCreator(theme) {

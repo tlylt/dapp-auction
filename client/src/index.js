@@ -5,8 +5,8 @@ import ReactDOM from "react-dom/client";
 import App from "./App";
 import "./index.css";
 import { HelmetProvider } from "react-helmet-async";
-import ThemeProvider from './theme/ThemeProvider';
-import { SnackbarProvider } from 'notistack';
+import ThemeProvider from "./theme/ThemeProvider";
+import { SnackbarProvider } from "notistack";
 
 require("dotenv").config();
 
