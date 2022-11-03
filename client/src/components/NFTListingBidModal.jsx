@@ -22,6 +22,26 @@ const style = {
   p: 4,
 };
 
+function getRPCErrorMessage(err){
+  let msg = ""
+  try {
+    var open = err.message.indexOf('{')
+    var close = err.message.lastIndexOf('}')
+    var j_s = err.message.substring(open, close + 1);
+    var j = JSON.parse(j_s);
+  
+    msg = j.value.data.message;
+    open = msg.indexOf('revert')
+    close = msg.length
+    msg = msg.substring(open+7, close)
+
+  } catch (err){
+    msg = "An error occurred"
+  }
+
+  return msg;
+}
+
 const test = async (things) => {
   let auctionContract = things.auctionContract;
   let info = await auctionContract.methods.info().call();
@@ -45,38 +65,35 @@ function NFTListingBidModal({ pinataMetadata, auctionData }) {
   const [currBidAmount, setCurrBidAmount] = useState(0);
 
   const handleBidAmountChange = (event) => {
-    setCurrBidAmount(event.target.value);
+    setCurrBidAmount(event.target.value*Math.pow(10, 9));
   };
 
   const submitBid = async () => {
     // Handle bidding
     // User bid amount is lower than highestBid or less than increment
     if (currBidAmount < highestBid) {
-      // some notification
       enqueueSnackbar('Bid amount is lower than highest bid', {
         variant: 'error',
       });
-      return;
+      return
     } else if (
       currBidAmount - highestBid < auctionData.increment &&
       accounts[0] !== auctionData.highestBidder
     ) {
-      // some notification
-    }
-    let sendAmount = currBidAmount - auctionData.userBidAmount;
+      enqueueSnackbar("Bid amount should be greater than highest bid + increment!", {variant: 'warning'})
+      return
+    } else {
+      let sendAmount = currBidAmount - auctionData.userBidAmount;
 
-    const auctionContract = auctionData.auctionContract;
-
-    try {
-      const res = await auctionContract.methods
-        .bid()
-        .send({ from: accounts[0], value: sendAmount });
-      console.log(res);
-      setHighestBid(currBidAmount);
-      enqueueSnackbar('Bid submitted successfully!', { variant: 'success' });
-    } catch (err) {
-      console.log(err);
-      enqueueSnackbar('Bid failed', { variant: 'error' });
+      const auctionContract = auctionData.auctionContract;
+      try {
+        await auctionContract.methods
+          .bid()
+          .send({ from: accounts[0], value: sendAmount });
+        enqueueSnackbar("Successfully submitted bid!", {variant: 'success'})
+      } catch (err) {
+        enqueueSnackbar(getRPCErrorMessage(err), {variant: 'error'})
+      }
     }
   };
 
@@ -84,9 +101,10 @@ function NFTListingBidModal({ pinataMetadata, auctionData }) {
     const auctionContract = auctionData.auctionContract;
     try {
       await auctionContract.methods.start().send({ from: accounts[0] });
+      enqueueSnackbar("Auction Successfully Started", {variant: 'success'})
       console.log('auction started :D');
     } catch (err) {
-      console.log(err);
+      enqueueSnackbar(getRPCErrorMessage(err), {variant: 'error'})
     }
   };
 
@@ -94,17 +112,24 @@ function NFTListingBidModal({ pinataMetadata, auctionData }) {
     const auctionContract = auctionData.auctionContract;
     try {
       await auctionContract.methods.withdraw().send({ from: accounts[0] });
+      enqueueSnackbar("Successfully withdrew your bid amount", {variant: 'success'})
+
     } catch (err) {
-      console.log(err);
+      enqueueSnackbar(getRPCErrorMessage(err), {variant: 'error'})
     }
   };
 
   const handleEnd = async () => {
+    if (accounts[0] !== auctionData.seller && accounts[0] !== auctionData.highestBidder){
+      enqueueSnackbar("You are not the seller nor highest bidder", {variant: 'error'})
+      return
+    }
     const auctionContract = auctionData.auctionContract;
     try {
       await auctionContract.methods.end().send({ from: accounts[0] });
+      enqueueSnackbar("Successfully ended the auction!", {variant: 'success'})
     } catch (err) {
-      console.log(err);
+      enqueueSnackbar(getRPCErrorMessage(err), {variant: 'error'})
     }
   };
 

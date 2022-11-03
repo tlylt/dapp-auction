@@ -114,6 +114,7 @@ export default function Creation({ refetchData }) {
       });
       refetchData();
     } catch (err) {
+      console.log(err)
       enqueueSnackbar('Transaction Rejected', { variant: 'error' });
       return;
     }
@@ -190,13 +191,13 @@ export default function Creation({ refetchData }) {
               fullWidth
               min={0}
               name="startingBid"
-              label="Starting Bid (Wei)"
+              label="Starting Bid (gWei)"
               id="startingBid"
               type="number"
               onChange={(event) => {
                 setVars({
                   ...vars,
-                  startingBid: event.target.value,
+                  startingBid: event.target.value*Math.pow(10, 9),  //convert to wei
                 });
               }}
               value={vars.startingBid}
@@ -206,13 +207,13 @@ export default function Creation({ refetchData }) {
               required
               fullWidth
               name="minIncrement"
-              label="Minimum Increment (Wei)"
+              label="Minimum Increment (gWei)"
               id="minIncrement"
               type="number"
               onChange={(event) => {
                 setVars({
                   ...vars,
-                  increment: event.target.value,
+                  increment: event.target.value*Math.pow(10, 9),  //convert to wei
                 });
               }}
               value={vars.increment}
@@ -228,7 +229,7 @@ export default function Creation({ refetchData }) {
               onChange={(event) => {
                 setVars({
                   ...vars,
-                  duration: event.target.value,
+                  duration: event.target.value*60*60, //convert to secs
                 });
               }}
               value={vars.duration}

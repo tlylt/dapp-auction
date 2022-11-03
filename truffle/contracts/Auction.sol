@@ -154,11 +154,13 @@ contract Auction is ReentrancyGuard {
         ended = true; // Ensure all state changes happen before calling external contracts
 
         if (highestBidder != address(0)) {
-            nft.transfer(highestBidder, nftId);
+            // Someone bidded
+            nft.transferFrom(address(this), highestBidder, nftId);
             (bool sent, ) = seller.call{value: highestBid}("");
             require(sent, "Could not pay seller!");
         } else {
-            nft.transfer(seller, nftId);
+            // no one bidded
+            nft.transferFrom(address(this), seller, nftId);
         }
 
         emit End(highestBidder, highestBid);
