@@ -5,9 +5,7 @@ import {
   alpha,
   ListItemText,
   Box,
-  Button,
 } from '@mui/material';
-import { useState } from 'react';
 import NFTListingBidModal from './NFTListingBidModal';
 import Text from './Text';
 

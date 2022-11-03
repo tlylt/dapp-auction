@@ -21,7 +21,6 @@ const style = {
 };
 
 const test = async (things) => {
-  console.log('here');
   let auctionContract = things.auctionContract;
   let info = await auctionContract.methods.info().call();
   console.log(info);
@@ -114,7 +113,7 @@ function NFTListingBidModal({ pinataMetadata, auctionData }) {
             }}
           >
             <Typography id="modal-modal-title" variant="h6" component="h2">
-              {pinataMetadata.name}
+              Title: {pinataMetadata.name}
             </Typography>
             <Typography id="modal-modal-description" sx={{ mt: 2 }}>
               Highest Bid: {highestBid}
@@ -124,31 +123,52 @@ function NFTListingBidModal({ pinataMetadata, auctionData }) {
               <CountdownTimer initialMinute={2} initialSecond={10} />
             </Typography>
             <hr />
-            <Button variant="contained" onClick={handleStartAuction}>
-              {' '}
-              Start{' '}
-            </Button>
-            <br />
-            <TextField
-              id="modal-bid"
-              label="My Bid (GWei)"
-              type="number"
-              variant="outlined"
-              onChange={handleBidAmountChange}
-            />
-            <Button variant="contained" onClick={submitBid}>
-              Submit Bid{' '}
-            </Button>
-            <br />
-            <Button variant="contained" onClick={handleWithdraw}>
-              {' '}
-              Withdraw{' '}
-            </Button>
-            <br />
-            <Button variant="contained" onClick={handleEnd}>
-              {' '}
-              End{' '}
-            </Button>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '10px',
+                alignItems: 'center',
+              }}
+            >
+              <Box display="flex">
+                <Typography>
+                  If you are the seller{' '}
+                  <Button variant="contained" onClick={handleStartAuction}>
+                    Start
+                  </Button>{' '}
+                  <Button variant="contained" onClick={handleEnd}>
+                    End
+                  </Button>
+                </Typography>
+              </Box>
+              <Box display="flex">
+                <TextField
+                  id="modal-bid"
+                  label="My Bid (GWei)"
+                  type="number"
+                  variant="outlined"
+                  required
+                  min={0}
+                  size="small"
+                  onChange={handleBidAmountChange}
+                />
+                <Button variant="contained" onClick={submitBid}>
+                  Submit Bid
+                </Button>
+              </Box>
+              <Box>
+                <Box display="flex">
+                  <Typography>
+                    No longer interested?{' '}
+                    <Button variant="contained" onClick={handleWithdraw}>
+                      {' '}
+                      Withdraw{' '}
+                    </Button>
+                  </Typography>
+                </Box>
+              </Box>
+            </Box>
           </Box>
         </Box>
       </Modal>
