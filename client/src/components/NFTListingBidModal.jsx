@@ -75,11 +75,13 @@ function NFTListingBidModal({ pinataMetadata, auctionData }) {
       enqueueSnackbar('Bid amount is lower than highest bid', {
         variant: 'error',
       });
+      return
     } else if (
       currBidAmount - highestBid < auctionData.increment &&
       accounts[0] !== auctionData.highestBidder
     ) {
       enqueueSnackbar("Bid amount should be greater than highest bid + increment!", {variant: 'warning'})
+      return
     } else {
       let sendAmount = currBidAmount - auctionData.userBidAmount;
 
