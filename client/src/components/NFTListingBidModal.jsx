@@ -7,6 +7,8 @@ import * as React from 'react';
 import CountdownTimer from './CountdownTimer';
 import { useState } from 'react';
 import { useEth } from '../contexts/EthContext';
+import { displayInGwei } from '../utils';
+import { useSnackbar } from 'notistack';
 
 const style = {
   position: 'absolute',
@@ -27,6 +29,7 @@ const test = async (things) => {
 };
 
 function NFTListingBidModal({ pinataMetadata, auctionData }) {
+  const { enqueueSnackbar } = useSnackbar();
   const {
     state: { accounts },
   } = useEth();
@@ -50,6 +53,10 @@ function NFTListingBidModal({ pinataMetadata, auctionData }) {
     // User bid amount is lower than highestBid or less than increment
     if (currBidAmount < highestBid) {
       // some notification
+      enqueueSnackbar('Bid amount is lower than highest bid', {
+        variant: 'error',
+      });
+      return;
     } else if (
       currBidAmount - highestBid < auctionData.increment &&
       accounts[0] !== auctionData.highestBidder
@@ -59,12 +66,17 @@ function NFTListingBidModal({ pinataMetadata, auctionData }) {
     let sendAmount = currBidAmount - auctionData.userBidAmount;
 
     const auctionContract = auctionData.auctionContract;
+
     try {
-      let res = await auctionContract.methods
+      const res = await auctionContract.methods
         .bid()
         .send({ from: accounts[0], value: sendAmount });
+      console.log(res);
+      setHighestBid(currBidAmount);
+      enqueueSnackbar('Bid submitted successfully!', { variant: 'success' });
     } catch (err) {
       console.log(err);
+      enqueueSnackbar('Bid failed', { variant: 'error' });
     }
   };
 
@@ -116,7 +128,7 @@ function NFTListingBidModal({ pinataMetadata, auctionData }) {
               Title: {pinataMetadata.name}
             </Typography>
             <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-              Highest Bid: {highestBid}
+              Highest Bid: {displayInGwei(highestBid)} gwei
             </Typography>
             <Typography id="modal-modal-description" sx={{ mt: 2 }}>
               Time Till Expiry:
@@ -133,7 +145,7 @@ function NFTListingBidModal({ pinataMetadata, auctionData }) {
             >
               <Box display="flex">
                 <Typography>
-                  If you are the seller{' '}
+                  If you are the seller:{' '}
                   <Button variant="contained" onClick={handleStartAuction}>
                     Start
                   </Button>{' '}
