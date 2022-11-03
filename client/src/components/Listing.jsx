@@ -1,11 +1,13 @@
-import { Card, Box, Grid, Typography, List } from '@mui/material';
+import { Card, Box, Grid, Typography, List, Button } from '@mui/material';
 import { useEffect } from 'react';
 import AuctionDetails from './AuctionDetails';
 import { useEth } from '../contexts/EthContext';
 import { getAuctionFactoryContract, getAuctions } from '../utils';
 import { useState } from 'react';
+import { useSnackbar } from 'notistack';
 
 function Listing() {
+  const { enqueueSnackbar } = useSnackbar();
   const {
     state: { web3, networkID },
   } = useEth();
@@ -22,6 +24,14 @@ function Listing() {
   useEffect(() => {
     console.log('auctions', auctions);
   }, [auctions]);
+
+  async function refetchData() {
+    const auctions = await getAuctions(web3, auctionFactoryContract);
+    setAuctions(auctions);
+    enqueueSnackbar('Auctions refreshed', {
+      variant: 'success',
+    });
+  }
 
   useEffect(() => {
     async function fetchData() {
@@ -42,7 +52,17 @@ function Listing() {
         mt={4}
         variant="h4"
       >
-        All Auctions
+        All Auctions{' '}
+        <Button
+          onClick={() => {
+            refetchData();
+          }}
+          variant="text"
+          color="secondary"
+          size="small"
+        >
+          Refresh
+        </Button>
       </Typography>
       <Grid spacing={0} container>
         <Box py={4} pr={4} flex={1}>
