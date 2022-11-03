@@ -90,3 +90,11 @@ export async function getAuctions(web3, auctionFactoryContract) {
   }
   return auctions;
 }
+
+export function displayInGwei(wei) {
+  return wei / 1000000000;
+}
+
+export function displayInHours(seconds) {
+  return seconds / 3600;
+}

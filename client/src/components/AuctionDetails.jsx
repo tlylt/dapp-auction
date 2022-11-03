@@ -6,6 +6,8 @@ import {
   ListItemText,
   Box,
 } from '@mui/material';
+import { useEth } from '../contexts/EthContext';
+import { displayInGwei } from '../utils';
 import NFTListingBidModal from './NFTListingBidModal';
 import Text from './Text';
 
@@ -35,12 +37,18 @@ const ListItemAvatarWrapper = styled(ListItemAvatar)(
 
 function AuctionDetails({ auction }) {
   const { pinataMetadata } = auction;
+  const {
+    state: { accounts },
+  } = useEth();
   return (
-    <ListItem>
+    <ListItem id={auction.auctionContract._address}>
       <ListItemAvatarWrapper>
         <img alt="img" src={pinataMetadata.image} width={400} height={400} />
       </ListItemAvatarWrapper>
       <Box display="flex" flexDirection="column">
+        {accounts[0] === auction.seller && (
+          <ListItemText primary={'✨My Auction✨'}></ListItemText>
+        )}
         <ListItemText
           primary={`Name: ${pinataMetadata.name}`}
           primaryTypographyProps={{
@@ -57,8 +65,10 @@ function AuctionDetails({ auction }) {
         <Text>
           Auction Contract Address: {auction.auctionContract._address}
         </Text>
-        <Text>Highest Bid: {auction.highestBid} (Wei)</Text>
-        <Text>Minimal Increment Per Bid: {auction.increment} (Wei)</Text>
+        <Text>Highest Bid: {displayInGwei(auction.highestBid)} (gwei)</Text>
+        <Text>
+          Minimal Increment Per Bid: {displayInGwei(auction.increment)} (gwei)
+        </Text>
         <Text>Auction Started: {auction.started ? 'Yes' : 'No'}</Text>
         <Text>Auction Ended: {auction.ended ? 'Yes' : 'No'}</Text>
       </Box>

@@ -43,8 +43,8 @@ module.exports = async function (callback) {
       const auction = await auctionFactory.createNewAuction(
         mintNFT.address,
         user.tokenId,
-        ether(0.1), // startingBid
-        ether(0.2), // increment
+        ether(0.001), // startingBid
+        ether(0.002), // increment
         60 * 60 * 24, // 1 day duration
         { from: user.account }
       );

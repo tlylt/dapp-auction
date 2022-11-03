@@ -106,7 +106,7 @@ function AuctionApp() {
           spacing={4}
         >
           <Grid item xs={12}>
-            <Account />
+            <Account auctions={auctions} />
           </Grid>
         </Grid>
         <Listing auctions={auctions} refetchData={refetchData} />
