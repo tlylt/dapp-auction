@@ -6,13 +6,11 @@ import {
   ListItemText,
   Box,
 } from '@mui/material';
+import NFTListingBidModal from './NFTListingBidModal';
 import Text from './Text';
-import CountdownTimer from './CountdownTimer';
 
 const ListItemAvatarWrapper = styled(ListItemAvatar)(
   ({ theme }) => `
-  min-width: 20rem;
-  min-height: 20rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -39,7 +37,13 @@ function AuctionDetails({ auction }) {
   return (
     <ListItem>
       <ListItemAvatarWrapper>
-        <img alt="img" src={pinataMetadata.image} />
+        <img
+          alt="img"
+          src={pinataMetadata.image}
+          width={400}
+          height={400}
+          objectFit={'contain'}
+        />
       </ListItemAvatarWrapper>
       <Box display="flex" flexDirection="column">
         <ListItemText
@@ -60,10 +64,14 @@ function AuctionDetails({ auction }) {
         </Text>
         <Text>Highest Bid: {auction.highestBid} (Wei)</Text>
         <Text>Minimal Increment Per Bid: {auction.increment} (Wei)</Text>
-        <Text>
-          Time Till Expiry:{' '}
-          <CountdownTimer initialMinute={2} initialSecond={10} />
-        </Text>
+        <Text>Auction Started: {auction.started ? 'Yes' : 'No'}</Text>
+        <Text>Auction Ended: {auction.ended ? 'Yes' : 'No'}</Text>
+      </Box>
+      <Box>
+        <NFTListingBidModal
+          pinataMetadata={pinataMetadata}
+          auctionData={auction}
+        />
       </Box>
     </ListItem>
   );

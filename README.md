@@ -1,5 +1,13 @@
 # DApp - Auction
 
+## Seed
+
+```
+ganache
+cd truffle
+truffle migrate --network development
+truffle exec scripts/seed.js
+```
 ## Quick Start
 
 ```bash
@@ -75,7 +83,7 @@ First we need to obtain the ipfs hash for the nft metadata that you want
 4. Run runScript.js
 
 ```
-   node scripts/runScipt.js
+   node scripts/runScript.js
 ```
 
 5. To view the pinned object, browse: https://gateway.pinata.cloud/ipfs/{your_IpfsHash}. Your ipfsHash can be obtained from the last entry in ipfsHash.json
