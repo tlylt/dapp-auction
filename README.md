@@ -8,6 +8,7 @@ cd truffle
 truffle migrate --network development
 truffle exec scripts/seed.js
 ```
+
 ## Quick Start
 
 ```bash
