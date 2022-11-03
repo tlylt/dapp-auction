@@ -5,7 +5,10 @@ import {
   alpha,
   ListItemText,
   Box,
+  Button,
 } from '@mui/material';
+import { useState } from 'react';
+import NFTListingBidModal from './NFTListingBidModal';
 import Text from './Text';
 
 const ListItemAvatarWrapper = styled(ListItemAvatar)(
@@ -65,6 +68,12 @@ function AuctionDetails({ auction }) {
         <Text>Minimal Increment Per Bid: {auction.increment} (Wei)</Text>
         <Text>Auction Started: {auction.started ? 'Yes' : 'No'}</Text>
         <Text>Auction Ended: {auction.ended ? 'Yes' : 'No'}</Text>
+      </Box>
+      <Box>
+        <NFTListingBidModal
+          pinataMetadata={pinataMetadata}
+          auctionData={auction}
+        />
       </Box>
     </ListItem>
   );
