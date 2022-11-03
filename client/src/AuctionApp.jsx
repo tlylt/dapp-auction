@@ -1,6 +1,6 @@
 import Footer from './components/Footer';
 import Account from './components/Account';
-import { EthProvider } from './contexts/EthContext';
+import { useEth } from './contexts/EthContext';
 
 import PageHeader from './components/PageHeader';
 import PageTitleWrapper from './components/PageTitleWrapper';
@@ -9,6 +9,9 @@ import { Box, alpha, lighten, Container, Grid, useTheme } from '@mui/material';
 import RootHeader from './components/RootHeader';
 import Listing from './components/Listing';
 import { useEffect } from 'react';
+import { useState } from 'react';
+import { getAuctionFactoryContract, getAuctions } from './utils';
+import { useSnackbar } from 'notistack';
 
 function AuctionApp() {
   useEffect(() => {
@@ -16,10 +19,8 @@ function AuctionApp() {
     var rootElement = document.documentElement;
     const scrollFunction = () => {
       if (rootElement.scrollTop > 300) {
-        // Show button
         scrollToTopBtn.classList.add('showBtn');
       } else {
-        // Hide button
         scrollToTopBtn.classList.remove('showBtn');
       }
     };
@@ -36,12 +37,43 @@ function AuctionApp() {
     };
   });
   const theme = useTheme();
+  const { enqueueSnackbar } = useSnackbar();
+
+  const [auctionFactoryContract, setAuctionFactoryContract] = useState(null);
+  const [auctions, setAuctions] = useState([]);
+  const {
+    state: { web3, networkID },
+  } = useEth();
+  useEffect(() => {
+    if (web3 && networkID) {
+      setAuctionFactoryContract(getAuctionFactoryContract(web3, networkID));
+    }
+  }, [web3, networkID]);
+
+  useEffect(() => {
+    console.log('auctions', auctions);
+  }, [auctions]);
+  useEffect(() => {
+    async function fetchData() {
+      const auctions = await getAuctions(web3, auctionFactoryContract);
+      setAuctions(auctions);
+    }
+    if (auctionFactoryContract) {
+      fetchData();
+    }
+  }, [auctionFactoryContract, web3]);
+  async function refetchData() {
+    const auctions = await getAuctions(web3, auctionFactoryContract);
+    setAuctions(auctions);
+    enqueueSnackbar('Auctions refreshed', {
+      variant: 'success',
+    });
+  }
   return (
     <Box
       sx={{
         flex: 1,
         height: '100%',
-
         '.MuiPageTitle-wrapper': {
           background: theme.colors.alpha.trueWhite[5],
           marginBottom: `${theme.spacing(4)}`,
@@ -61,28 +93,26 @@ function AuctionApp() {
         },
       }}
     >
-      <EthProvider>
-        <RootHeader />
-        <PageTitleWrapper>
-          <PageHeader />
-        </PageTitleWrapper>
-        <Container maxWidth="lg">
-          <Grid
-            container
-            direction="row"
-            justifyContent="center"
-            alignItems="stretch"
-            spacing={4}
-          >
-            <Grid item xs={12}>
-              <Account />
-            </Grid>
+      <RootHeader />
+      <PageTitleWrapper>
+        <PageHeader refetchData={refetchData} />
+      </PageTitleWrapper>
+      <Container maxWidth="lg">
+        <Grid
+          container
+          direction="row"
+          justifyContent="center"
+          alignItems="stretch"
+          spacing={4}
+        >
+          <Grid item xs={12}>
+            <Account />
           </Grid>
-          <Listing />
-        </Container>
-        <Footer />
-        <button className="scrollToTopBtn cursor-pointer">☝️</button>
-      </EthProvider>
+        </Grid>
+        <Listing auctions={auctions} refetchData={refetchData} />
+      </Container>
+      <Footer />
+      <button className="scrollToTopBtn cursor-pointer">☝️</button>
     </Box>
   );
 }

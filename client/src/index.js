@@ -7,6 +7,7 @@ import "./index.css";
 import { HelmetProvider } from "react-helmet-async";
 import ThemeProvider from "./theme/ThemeProvider";
 import { SnackbarProvider } from "notistack";
+import { EthProvider } from "./contexts/EthContext";
 
 require("dotenv").config();
 
@@ -19,11 +20,13 @@ root.render(
   <React.StrictMode>
     <Web3ReactProvider getLibrary={getLibrary}>
       <ThemeProvider>
-        <SnackbarProvider maxSnack={3}>
-          <HelmetProvider>
-            <App />
-          </HelmetProvider>
-        </SnackbarProvider>
+        <EthProvider>
+          <SnackbarProvider maxSnack={3}>
+            <HelmetProvider>
+              <App />
+            </HelmetProvider>
+          </SnackbarProvider>
+        </EthProvider>
       </ThemeProvider>
     </Web3ReactProvider>
   </React.StrictMode>

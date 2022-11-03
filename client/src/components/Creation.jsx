@@ -12,7 +12,7 @@ import Typography from '@mui/material/Typography';
 import { useEth } from '../contexts/EthContext';
 import { useState } from 'react';
 import { Box, TextField } from '@mui/material';
-
+import { useSnackbar } from 'notistack';
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialogContent-root': {
     padding: theme.spacing(2),
@@ -51,8 +51,9 @@ BootstrapDialogTitle.propTypes = {
   onClose: PropTypes.func.isRequired,
 };
 
-export default function Creation() {
+export default function Creation({ refetchData }) {
   const [open, setOpen] = useState(false);
+  const { enqueueSnackbar } = useSnackbar();
 
   const {
     state: { web3, networkID, accounts },
@@ -62,24 +63,60 @@ export default function Creation() {
 
   const handleCreate = async (e) => {
     e.preventDefault();
+    if (vars.nftAddress === '') {
+      enqueueSnackbar('NFT Address is required', { variant: 'error' });
+      return;
+    }
+    if (vars.startingBid <= 0) {
+      enqueueSnackbar('Starting Bid must be greater than 0', {
+        variant: 'error',
+      });
+      return;
+    }
+    if (vars.duration <= 0) {
+      enqueueSnackbar('Duration must be greater or equal to 1 hour', {
+        variant: 'error',
+      });
+      return;
+    }
+
+    if (vars.increment <= 0) {
+      enqueueSnackbar('Increment must be greater than 0', { variant: 'error' });
+      return;
+    }
+
     let auctionAddress = auctionJson.networks[networkID].address;
     auctionFactoryContract = new web3.eth.Contract(
       auctionJson.abi,
       auctionAddress
     );
-    let val = await auctionFactoryContract.methods
-      .createNewAuction(
-        vars.nftAddress,
-        vars.nftId,
-        vars.startingBid,
-        vars.increment,
-        vars.duration
-      )
-      .send({ from: accounts[0] });
-    let auctionDeployedAddress =
-      val.events.ContractCreated.returnValues.newContractAddress;
-    console.log(auctionDeployedAddress);
-    setOpen(false);
+    try {
+      let val = await auctionFactoryContract.methods
+        .createNewAuction(
+          vars.nftAddress,
+          vars.nftId,
+          vars.startingBid,
+          vars.increment,
+          vars.duration
+        )
+        .send({ from: accounts[0] });
+      let auctionDeployedAddress =
+        val.events.ContractCreated.returnValues.newContractAddress;
+      console.log(auctionDeployedAddress);
+      setOpen(false);
+      enqueueSnackbar('Auction Created', { variant: 'success' });
+      setVars({
+        nftAddress: '',
+        nftId: '',
+        startingBid: 0,
+        increment: 0,
+        duration: 0,
+      });
+      refetchData();
+    } catch (err) {
+      enqueueSnackbar('Transaction Rejected', { variant: 'error' });
+      return;
+    }
   };
 
   const handleClickOpen = () => {
@@ -121,6 +158,7 @@ export default function Creation() {
               id="nftAddress"
               label="NFT Address"
               name="nftAddress"
+              placeholder="0x..."
               autoFocus
               onChange={(event) => {
                 setVars({
@@ -152,7 +190,7 @@ export default function Creation() {
               fullWidth
               min={0}
               name="startingBid"
-              label="Starting Bid"
+              label="Starting Bid (Wei)"
               id="startingBid"
               type="number"
               onChange={(event) => {
@@ -168,7 +206,7 @@ export default function Creation() {
               required
               fullWidth
               name="minIncrement"
-              label="Minimum Increment"
+              label="Minimum Increment (Wei)"
               id="minIncrement"
               type="number"
               onChange={(event) => {

@@ -13,7 +13,7 @@ truffle exec scripts/seed.js
 
 ```bash
 ganache
-# food object another carpet sausage shed reject elegant wheat satisfy aisle subject
+# 0x7def1d6071feb01bc558816b44a8b300f8bfd026fd81cb57488481dada16ffff
 cd truffle
 truffle migrate --network development
 # auction factory address: 0x8227EF71284c48c4caAa15F26C9C1
@@ -25,11 +25,11 @@ node scripts/runScript.js
 # Mint
 cd truffle
 npx truffle console --network development
-const nft = await MintNFT.deployed()  # returns undefined
+const nft = await MintNFT.deployed()
 nft.address # address where MintNFT contract is deployed to. # 0xb981afF3030Fc2D019c1104243BdE7df0fDc36B6
 # Once the above are confirmed, you can mine your nft
-let res1 = await nft.mint('https://gateway.pinata.cloud/ipfs/QmXrB7rtEpXP5SSA2fTHUFcYG3MEg3gTTwKQPVsU4XUQS6')
-let tokenId = res1.receipt.logs[0].args.tokenId.words[0]
+let res = await nft.mint('https://gateway.pinata.cloud/ipfs/QmZ5YDGxnAjtHB6apV2wAiRUAcAXeNsNfsaSHPjosGnTZT')
+let tokenId = res.receipt.logs[0].args.tokenId.words[0]
 tokenId // 1
 
 await nft.ownerOf(tokenId)

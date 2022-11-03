@@ -1,7 +1,7 @@
 import { Typography, Avatar, Grid, useTheme } from '@mui/material';
 import Creation from './Creation';
 
-function PageHeader() {
+function PageHeader({ refetchData }) {
   const user = {
     avatar: 'https://avatars.dicebear.com/api/pixel-art-neutral/7.svg',
   };
@@ -28,7 +28,7 @@ function PageHeader() {
         <Typography variant="subtitle2">
           Participate in NFT auctions now!
         </Typography>
-        <Creation />
+        <Creation refetchData={refetchData} />
       </Grid>
     </Grid>
   );

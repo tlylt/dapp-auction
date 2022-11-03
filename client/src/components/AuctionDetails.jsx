@@ -28,6 +28,7 @@ const ListItemAvatarWrapper = styled(ListItemAvatar)(
     padding: ${theme.spacing(0.5)};
     display: block;
     border-radius: inherit;
+    object-fit: contain;
   }
 `
 );
@@ -37,13 +38,7 @@ function AuctionDetails({ auction }) {
   return (
     <ListItem>
       <ListItemAvatarWrapper>
-        <img
-          alt="img"
-          src={pinataMetadata.image}
-          width={400}
-          height={400}
-          objectFit={'contain'}
-        />
+        <img alt="img" src={pinataMetadata.image} width={400} height={400} />
       </ListItemAvatarWrapper>
       <Box display="flex" flexDirection="column">
         <ListItemText
