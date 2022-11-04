@@ -41,12 +41,14 @@ module.exports = async function (callback) {
     // Construct auction
     for (let i = 0; i < demoUsers.length; i++) {
       const user = demoUsers[i];
+      // if it is the first user, set hour to 1 minute
+      const hour = i === 0 ? 60 : Math.floor(Math.random() * 1440) + 1;
       const auction = await auctionFactory.createNewAuction(
         mintNFT.address,
         user.tokenId,
-        ether(Math.floor(Math.random() * 100) / 10000), // random starting price
+        ether(0.01), // random starting price
         ether(Math.floor(Math.random() * 100) / 10000), // random increment
-        Math.floor(Math.random() * 1440) + 1, // set a random duration between 1 minute and 24 hours
+        hour, // set a random duration between 1 minute and 24 hours
         { from: user.account }
       );
       user.auctionAddress = auction.logs[0].args.newContractAddress;
