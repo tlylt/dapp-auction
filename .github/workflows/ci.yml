@@ -30,6 +30,7 @@ jobs:
         run: |
           cd truffle
           npm install
+          ganache
       - name: Test contracts
         run: |
           cd truffle
