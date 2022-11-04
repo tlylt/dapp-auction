@@ -222,7 +222,11 @@ function NFTListingBidModal({ pinataMetadata, auctionData }) {
             </Typography>
             <Typography id="modal-modal-description" sx={{ mt: 2 }}>
               Time Till Expiry:
-              {auctionData.started && !auctionData.ended ? (
+              {auctionData.ended ? (
+                <span>
+                  <i>Auction has already ended</i>
+                </span>
+              ) : auctionData.started ? (
                 <CountdownTimer
                   initialHour={timeTillExpiryHours}
                   initialMinute={timeTillExpiryMinutes}
