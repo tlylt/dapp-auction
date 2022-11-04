@@ -50,7 +50,6 @@ module.exports = async function (callback) {
         { from: user.account }
       );
       user.auctionAddress = auction.logs[0].args.newContractAddress;
-
     }
 
     // Each user approves the auction factory to spend their NFT
