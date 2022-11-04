@@ -8,9 +8,8 @@ on:
       - main
 
 jobs:
-  prettier:
+  CI:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -25,11 +24,6 @@ jobs:
           # This part is also where you can pass other options, for example:
           only_changed: True
           prettier_options: --write **/*.{js,md}
-      - name: Test build frontend
-        run: |
-          cd client
-          npm install --legacy-peer-deps
-          npm run build
       - name: Install ganache
         run: npm install ganache --global
       - name: Install contract deps
@@ -41,3 +35,8 @@ jobs:
           cd truffle
           truffle migrate --network development
           truffle test
+      - name: Test build frontend
+        run: |
+          cd client
+          npm install --legacy-peer-deps
+          npm run build

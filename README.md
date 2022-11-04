@@ -1,5 +1,7 @@
 # DApp - Auction
 
+[![Continuous Integration](https://github.com/tlylt/dapp-auction/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/tlylt/dapp-auction/actions/workflows/ci.yml)
+
 ## Quick Start
 
 ```bash
