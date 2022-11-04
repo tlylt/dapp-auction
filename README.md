@@ -1,14 +1,5 @@
 # DApp - Auction
 
-## Seed
-
-```
-ganache
-cd truffle
-truffle migrate --network development
-truffle exec scripts/seed.js
-```
-
 ## Quick Start
 
 ```bash
@@ -134,6 +125,15 @@ await nft.ownerOf({token id}) // token id obtained from the previous step "type"
    - NFT Address --> nft.address
    - NFT Token Id --> token id
    - Starting Bid / Increment --> as desired
+
+## Seed the local blockchain with some test data
+
+```
+ganache
+cd truffle
+truffle migrate --network development
+truffle exec scripts/seed.js
+```
 
 ## Smart Contract Design
 
