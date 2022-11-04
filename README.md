@@ -35,6 +35,7 @@ tokenId // 1
 
 await nft.ownerOf(tokenId)
 # owner address 0x0a6EA4eE50c3fC7549E615cD0974c40a57a5330e
+```
 
 # Approve Auction
 Approve the auction contract using its address in the dropdown list above and the `tokenId` from previously
@@ -204,4 +205,3 @@ Our auction contract uses Solidity 0.8.0, which has built-in overflow checking. 
 Images:
 
 - Beeple, Everydays: The First 5000 Days. Sold for: $69.3 million Beeple/Christie’s
-```
