@@ -38,6 +38,7 @@ await nft.ownerOf(tokenId)
 ```
 
 # Approve Auction
+
 Approve the auction contract using its address in the dropdown list above and the `tokenId` from previously
 
 # Setup Instructions
