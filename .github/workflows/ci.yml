@@ -33,6 +33,7 @@ jobs:
       - name: Test contracts
         run: |
           cd truffle
+          npm install -g truffle
           truffle migrate --network development
           truffle test
       - name: Test build frontend

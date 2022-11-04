@@ -7,6 +7,7 @@ NFTAuction: Sell & Bid on NFTs Auctions Governed by Smart Contract
 ## Quick Start
 
 ```bash
+# start local blockchain
 ganache
 # keep track of private key to import account for testing
 # 0x7def1d6071feb01bc558816b44a8b300f8bfd026fd81cb57488481dada16ffff
