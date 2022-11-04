@@ -25,14 +25,17 @@ module.exports = async function (callback) {
       const auctionStarted = auctionDetails[9];
       const auctionEnded = auctionDetails[10];
       const auctionEndAt = auctionDetails[4];
-      if (auctionStarted && !auctionEnded && auctionEndAt < Date.now()) {
+      if (auctionStarted && !auctionEnded && auctionEndAt < Math.floor(Date.now() / 1000)) {
         console.log("Found an auction that has ended");
         console.log("System will now help to close the auction");
         await auctionContract.end({ from: accounts[0] });
+        console.log("Auction closed");
       } else {
         console.log("This auction needs not be closed, skipping...");
       }
+      console.log("--------------------------------------------");
     }
+    console.log("All auctions have been checked");
   } catch (error) {
     console.log(error);
   }

@@ -57,7 +57,7 @@ const calculateTimeTillExpiry = (auctionData) => {
   };
 };
 
-function NFTListingBidModal({ pinataMetadata, auctionData }) {
+function NFTListingBidModal({ pinataMetadata, auctionData, refetchData }) {
   const { enqueueSnackbar } = useSnackbar();
   const {
     state: { accounts },
@@ -68,6 +68,7 @@ function NFTListingBidModal({ pinataMetadata, auctionData }) {
   };
   const handleClose = () => {
     setOpen(false);
+    refetchData();
   };
   const [highestBid, setHighestBid] = useState(auctionData.highestBid);
   const [highestBidder, setHighestBidder] = useState(auctionData.highestBidder);
@@ -100,7 +101,9 @@ function NFTListingBidModal({ pinataMetadata, auctionData }) {
       auctionData.auctionContract.events.Bid({}, (err, res) => {
         setHighestBid(parseInt(res.returnValues.amount));
         setHighestBidder(parseInt(res.returnValues.sender));
-        console.log(err);
+        if (err) {
+          console.log(err);
+        }
       });
     }
   }, [auctionData.auctionContract, setHighestBid]);
@@ -266,7 +269,12 @@ function NFTListingBidModal({ pinataMetadata, auctionData }) {
                 alignItems: 'center',
               }}
             >
-              <Box display="flex">
+              <Box
+                display="flex"
+                flexDirection="column"
+                alignItems="center"
+                gap="10px"
+              >
                 {role === 'seller' && (
                   <Typography>
                     As the seller, you can{' '}
@@ -278,18 +286,7 @@ function NFTListingBidModal({ pinataMetadata, auctionData }) {
                     </Button>
                   </Typography>
                 )}
-                {role === 'bidder' && (
-                  <Box display="flex">
-                    <Typography>
-                      No longer interested?{' '}
-                      <Button variant="contained" onClick={handleWithdraw}>
-                        {' '}
-                        Withdraw{' '}
-                      </Button>
-                    </Typography>
-                  </Box>
-                )}
-                {role === 'notBidder' && (
+                {(role === 'notBidder' || role === 'bidder') && (
                   <Box display="flex">
                     <TextField
                       id="modal-bid"
@@ -306,6 +303,19 @@ function NFTListingBidModal({ pinataMetadata, auctionData }) {
                     </Button>
                   </Box>
                 )}
+
+                {role === 'bidder' && (
+                  <Box display="flex">
+                    <Typography>
+                      No longer interested?{' '}
+                      <Button variant="contained" onClick={handleWithdraw}>
+                        {' '}
+                        Withdraw{' '}
+                      </Button>
+                    </Typography>
+                  </Box>
+                )}
+
                 {role === 'highestBidder' && (
                   <Typography>
                     As the highest bidder:{' '}

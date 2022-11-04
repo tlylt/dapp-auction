@@ -43,14 +43,26 @@ module.exports = async function (callback) {
     // Construct auction
     for (let i = 0; i < demoUsers.length; i++) {
       const user = demoUsers[i];
-      // if it is the first user, set hour to 1 minute
-      const hour = i === 0 ? 60 : Math.floor(Math.random() * 1440) + 1;
+      let duration;
+      switch (i) {
+        case 0:
+          duration = 60;
+          break;
+        case 2:
+          duration = 120;
+          break;
+        case 4:
+          duration = 180;
+          break;
+        default:
+          duration = Math.floor(Math.random() * 1440) + 1;
+      }
       const auction = await auctionFactory.createNewAuction(
         mintNFT.address,
         user.tokenId,
         gwei(1000000000 + 10000000 * i),
         gwei(10000000 + 10000000 * i),
-        hour, // set a random duration between 1 minute and 24 hours
+        duration, // set a random duration between 1 minute and 24 hours
         { from: user.account }
       );
       user.auctionAddress = auction.logs[0].args.newContractAddress;

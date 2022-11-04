@@ -54,7 +54,7 @@ const ListItemWrapper = styled(ListItem)(
 `
 );
 
-function AuctionDetails({ auction }) {
+function AuctionDetails({ auction, refetchData }) {
   const { pinataMetadata } = auction;
   const {
     state: { accounts },
@@ -188,6 +188,7 @@ function AuctionDetails({ auction }) {
           <NFTListingBidModal
             pinataMetadata={pinataMetadata}
             auctionData={auction}
+            refetchData={refetchData}
           />
         </Box>
       </Box>
