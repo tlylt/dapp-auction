@@ -1,8 +1,6 @@
 import { alpha, createTheme, lighten, darken } from "@mui/material";
 import "@mui/lab/themeAugmentation";
 
-// import i18n from 'src/i18n/i18n';
-
 const themeColors = {
   primary: "#5569ff",
   secondary: "#6E759F",
@@ -132,7 +130,6 @@ const colors = {
 };
 
 export const PureLightTheme = createTheme({
-  // direction: i18n.dir(),
   colors: {
     gradients: {
       blue1: colors.gradients.blue1,
@@ -926,9 +923,9 @@ export const PureLightTheme = createTheme({
         },
         root: {
           ".MuiAutocomplete-inputRoot.MuiOutlinedInput-root .MuiAutocomplete-endAdornment":
-            {
-              right: 14,
-            },
+          {
+            right: 14,
+          },
         },
         clearIndicator: {
           background: colors.error.lighter,

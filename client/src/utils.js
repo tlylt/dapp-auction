@@ -46,9 +46,6 @@ export async function getAuctions(web3, auctionFactoryContract, accounts) {
       auctionContractAddress
     );
     const nftId = parseInt(await auctionContract.methods.nftId().call());
-    // TODO - Enforce min bid increment - highestBid, increment
-    // TODO - Update highest bid by listening for emitted Bid events
-    // TODO - Submit bid via payable Auction.bid()
     const info = await auctionContract.methods
       .info()
       .call({ from: accounts[0] });
@@ -63,9 +60,7 @@ export async function getAuctions(web3, auctionFactoryContract, accounts) {
         .tokenURI(nftId)
         .call();
       const nftMetadata = await fetch(nftMetadataUri);
-      // console.log(nftMetadata, nftMetadataUri);
       const nftMetadataJson = await nftMetadata.json();
-      // console.log("NFT Metadata", nftMetadataJson);
       const auction = {
         pinataImageUri: nftMetadataJson.image,
         pinataMetadata: nftMetadataJson,

@@ -51,11 +51,12 @@ function AuctionApp() {
   }, [web3, networkID]);
 
   useEffect(() => {
-    console.log('auctions', auctions);
-  }, [auctions]);
-  useEffect(() => {
     async function fetchData() {
-      const auctions = await getAuctions(web3, auctionFactoryContract, accounts);
+      const auctions = await getAuctions(
+        web3,
+        auctionFactoryContract,
+        accounts
+      );
       setAuctions(auctions);
     }
     if (auctionFactoryContract) {

@@ -74,7 +74,7 @@ export default function Header() {
             className={classes.button}
             disableElevation
             variant="contained"
-            color="success"
+            color="primary"
             href="/auction"
           >
             Launch App
