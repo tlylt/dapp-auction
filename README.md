@@ -1,15 +1,18 @@
 # DApp - Auction
 
+NFTAuction: Sell & Bid on NFTs Auctions Governed by Smart Contract
+
 [![Continuous Integration](https://github.com/tlylt/dapp-auction/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/tlylt/dapp-auction/actions/workflows/ci.yml)
 
 ## Quick Start
 
 ```bash
 ganache
+# keep track of private key to import account for testing
 # 0x7def1d6071feb01bc558816b44a8b300f8bfd026fd81cb57488481dada16ffff
 cd truffle
+# compile and migrate contracts
 truffle migrate --network development
-# auction factory address: 0x8227EF71284c48c4caAa15F26C9C1
 
 cd client
 node scripts/runScript.js
