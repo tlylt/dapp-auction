@@ -70,15 +70,37 @@ function NFTListingBidModal({ pinataMetadata, auctionData }) {
     setOpen(false);
   };
   const [highestBid, setHighestBid] = useState(auctionData.highestBid);
+  const [highestBidder, setHighestBidder] = useState(auctionData.highestBidder);
+  const [role, setRole] = useState('bidder'); // 'seller', 'highestBidder', 'bidder', 'notBidder
   const { timeTillExpiryHours, timeTillExpiryMinutes, timeTillExpirySeconds } =
     calculateTimeTillExpiry(auctionData);
   const [currBidAmount, setCurrBidAmount] = useState(0);
+
+  useEffect(() => {
+    if (accounts[0] === auctionData.seller) {
+      setRole('seller');
+    } else if (accounts[0] === highestBidder) {
+      setRole('highestBidder');
+    } else if (auctionData.userBidAmount > 0) {
+      setRole('bidder');
+    } else {
+      setRole('notBidder');
+    }
+  }, [
+    accounts,
+    highestBidder,
+    auctionData.seller,
+    auctionData.userBidAmount,
+    open,
+  ]);
 
   // As soon as auctionContract is ready, we'll register our Solidity event listener on Auction.bid()
   useEffect(() => {
     if (auctionData.auctionContract !== null) {
       auctionData.auctionContract.events.Bid({}, (err, res) => {
         setHighestBid(parseInt(res.returnValues.amount));
+        setHighestBidder(parseInt(res.returnValues.sender));
+        console.log(err);
       });
     }
   }, [auctionData.auctionContract, setHighestBid]);
@@ -94,7 +116,6 @@ function NFTListingBidModal({ pinataMetadata, auctionData }) {
     }
     // User bid amount is lower than highestBid or less than increment
     if (currBidAmount < highestBid) {
-      // some notification
       enqueueSnackbar('Bid amount is lower than highest bid', {
         variant: 'error',
       });
@@ -110,7 +131,6 @@ function NFTListingBidModal({ pinataMetadata, auctionData }) {
       return;
     } else {
       let sendAmount = currBidAmount - auctionData.userBidAmount;
-      // debugger;
       console.log(currBidAmount, auctionData.userBidAmount, sendAmount);
       const auctionContract = auctionData.auctionContract;
       try {
@@ -120,6 +140,7 @@ function NFTListingBidModal({ pinataMetadata, auctionData }) {
           .send({ from: accounts[0], value: sendAmount });
         enqueueSnackbar('Successfully submitted bid!', { variant: 'success' });
         auctionData.userBidAmount = currBidAmount;
+        setRole('highestBidder');
         console.log(auctionData.userBidAmount);
       } catch (err) {
         enqueueSnackbar(getRPCErrorMessage(err), { variant: 'error' });
@@ -144,15 +165,13 @@ function NFTListingBidModal({ pinataMetadata, auctionData }) {
 
   const handleWithdraw = async () => {
     // highest bidder cannot withdraw
-    if (auctionData.highestBidder === accounts[0]) {
+    if (highestBidder === accounts[0]) {
       enqueueSnackbar('You are the highest bidder! You cannot withdraw!', {
         variant: 'error',
       });
       return;
     }
-    if (
-      auctionData.highestBidder === '0x0000000000000000000000000000000000000000'
-    ) {
+    if (highestBidder === '0x0000000000000000000000000000000000000000') {
       enqueueSnackbar('No one has placed any bid yet!', {
         variant: 'error',
       });
@@ -221,7 +240,7 @@ function NFTListingBidModal({ pinataMetadata, auctionData }) {
               Highest Bid: {displayInGwei(highestBid)} gwei
             </Typography>
             <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-              Time Till Expiry:
+              Time Till Expiry:{' '}
               {auctionData.ended ? (
                 <span>
                   <i>Auction has already ended</i>
@@ -248,41 +267,53 @@ function NFTListingBidModal({ pinataMetadata, auctionData }) {
               }}
             >
               <Box display="flex">
-                <Typography>
-                  If you are the seller{' '}
-                  <Button variant="contained" onClick={handleStartAuction}>
-                    Start
-                  </Button>{' '}
-                  <Button variant="contained" onClick={handleEnd}>
-                    End
-                  </Button>
-                </Typography>
-              </Box>
-              <Box display="flex">
-                <TextField
-                  id="modal-bid"
-                  label="My Bid (GWei)"
-                  type="number"
-                  variant="outlined"
-                  required
-                  min={0}
-                  size="small"
-                  onChange={handleBidAmountChange}
-                />
-                <Button variant="contained" onClick={submitBid}>
-                  Submit Bid
-                </Button>
-              </Box>
-              <Box>
-                <Box display="flex">
+                {role === 'seller' && (
                   <Typography>
-                    No longer interested?{' '}
-                    <Button variant="contained" onClick={handleWithdraw}>
-                      {' '}
-                      Withdraw{' '}
+                    As the seller, you can{' '}
+                    <Button variant="contained" onClick={handleStartAuction}>
+                      Start
+                    </Button>{' '}
+                    <Button variant="contained" onClick={handleEnd}>
+                      End
                     </Button>
                   </Typography>
-                </Box>
+                )}
+                {role === 'bidder' && (
+                  <Box display="flex">
+                    <Typography>
+                      No longer interested?{' '}
+                      <Button variant="contained" onClick={handleWithdraw}>
+                        {' '}
+                        Withdraw{' '}
+                      </Button>
+                    </Typography>
+                  </Box>
+                )}
+                {role === 'notBidder' && (
+                  <Box display="flex">
+                    <TextField
+                      id="modal-bid"
+                      label="My Bid (GWei)"
+                      type="number"
+                      variant="outlined"
+                      required
+                      min={0}
+                      size="small"
+                      onChange={handleBidAmountChange}
+                    />
+                    <Button variant="contained" onClick={submitBid}>
+                      Submit Bid
+                    </Button>
+                  </Box>
+                )}
+                {role === 'highestBidder' && (
+                  <Typography>
+                    As the highest bidder:{' '}
+                    <Button variant="contained" onClick={handleEnd}>
+                      End
+                    </Button>
+                  </Typography>
+                )}
               </Box>
             </Box>
           </Box>

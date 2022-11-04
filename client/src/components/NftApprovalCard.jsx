@@ -37,12 +37,19 @@ const NftApprovalCard = () => {
     let nftAddress = nftJson.networks[networkID].address;
     let nftContract = new web3.eth.Contract(nftJson.abi, nftAddress);
     const tid = parseInt(vars.nftId);
-    await nftContract.methods
-      .approve(vars.auctionAddress, tid)
-      .send({ from: accounts[0] });
-    enqueueSnackbar('Approval successful', {
-      variant: 'success',
-    });
+    try {
+      await nftContract.methods
+        .approve(vars.auctionAddress, tid)
+        .send({ from: accounts[0] });
+      enqueueSnackbar('Approval successful', {
+        variant: 'success',
+      });
+    } catch (err) {
+      console.log(err);
+      enqueueSnackbar('Approval failed', {
+        variant: 'error',
+      });
+    }
   };
 
   return (

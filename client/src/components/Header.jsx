@@ -10,7 +10,7 @@ import {
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Link as Scroll } from 'react-scroll';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     display: 'flex',
     justifyContent: 'center',
@@ -74,7 +74,7 @@ export default function Header() {
             className={classes.button}
             disableElevation
             variant="contained"
-            color="primary"
+            color="default"
             href="/auction"
           >
             Launch App

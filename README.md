@@ -9,8 +9,9 @@ NFTAuction: Sell & Bid on NFTs Auctions Governed by Smart Contract
 ```bash
 # start local blockchain
 ganache
-# keep track of private key to import account for testing
-# 0x7def1d6071feb01bc558816b44a8b300f8bfd026fd81cb57488481dada16ffff
+# keep track of private keys to import account for testing
+# 0x156def9ee6e65599671d0829e5994b26f786cbdf142450a2cb0a40a78e6fa250
+# 0x64af5f4d553f98aeb2d992e2a6bed318da9fdf65b94ab07cc4fbe9fabb5ed6f4
 cd truffle
 # compile and migrate contracts
 truffle migrate --network development
@@ -42,6 +43,15 @@ let tokenId = res.receipt.logs[0].args.tokenId.words[0]
 tokenId
 
 await nft.ownerOf(tokenId)
+```
+
+Seed the local blockchain with some test data
+
+```bash
+ganache
+cd truffle
+truffle migrate --network development
+truffle exec scripts/seed.js
 ```
 
 ## Setup Instructions
@@ -137,15 +147,6 @@ await nft.ownerOf({token id}) // token id obtained from the previous step "type"
    - NFT Address --> nft.address
    - NFT Token Id --> token id
    - Starting Bid / Increment --> as desired
-
-## Seed the local blockchain with some test data
-
-```
-ganache
-cd truffle
-truffle migrate --network development
-truffle exec scripts/seed.js
-```
 
 ## Smart Contract Design
 

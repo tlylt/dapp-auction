@@ -2,7 +2,11 @@ import { Card, Box, Grid, Typography, Divider, Stack } from '@mui/material';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import { useEth } from '../contexts/EthContext';
-import { displayInGwei, displayInHours } from '../utils';
+import {
+  displayInGwei,
+  displayInHours,
+  displayTimestampInHumanReadable,
+} from '../utils';
 import NftApprovalCard from './NftApprovalCard';
 
 function Account({ auctions }) {
@@ -118,6 +122,16 @@ function Account({ auctions }) {
                     <Typography variant="h4">Minimal increment</Typography>
                     {displayInGwei(auction.increment)} gwei
                   </Stack>
+                  <Stack
+                    direction="row"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    spacing={2}
+                  >
+                    <Typography variant="h4">Start At</Typography>
+                    {displayTimestampInHumanReadable(auction.startAt)}
+                  </Stack>
+
                   <Stack
                     direction="row"
                     justifyContent="space-between"

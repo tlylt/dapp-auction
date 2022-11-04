@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 const CountdownTimer = (props) => {
   const { initialHour = 0, initialMinute = 0, initialSecond = 0 } = props;
@@ -31,13 +31,13 @@ const CountdownTimer = (props) => {
 
   return (
     <span>
-      {hours === 0 && minutes === 0 && seconds === 0 ? (
-        <b>Expired</b>
+      {hours <= 0 && minutes <= 0 && seconds <= 0 ? (
+        <i>Auction has already expired</i>
       ) : (
         <b>
-          {hours.toString().padStart(2, "0")}:
-          {minutes.toString().padStart(2, "0")}:
-          {seconds.toString().padStart(2, "0")}
+          {hours.toString().padStart(2, '0')}:
+          {minutes.toString().padStart(2, '0')}:
+          {seconds.toString().padStart(2, '0')}
         </b>
       )}
     </span>

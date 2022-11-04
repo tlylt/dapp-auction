@@ -10,7 +10,11 @@ import {
   Tooltip,
 } from '@mui/material';
 import { useEth } from '../contexts/EthContext';
-import { displayInGwei, displayInHours } from '../utils';
+import {
+  displayInGwei,
+  displayInHours,
+  displayTimestampInHumanReadable,
+} from '../utils';
 import NFTListingBidModal from './NFTListingBidModal';
 
 const ListItemAvatarWrapper = styled(ListItemAvatar)(
@@ -27,13 +31,25 @@ const ListItemAvatarWrapper = styled(ListItemAvatar)(
       ? theme.colors.alpha.trueWhite[30]
       : alpha(theme.colors.alpha.black[100], 0.07)
   };
-
   img {
     background: ${theme.colors.alpha.trueWhite[100]};
     padding: ${theme.spacing(0.5)};
     display: block;
     border-radius: inherit;
     object-fit: contain;
+  }
+  
+`
+);
+
+const ListItemWrapper = styled(ListItem)(
+  ({ theme }) => `
+  transition: ${theme.transitions.create(['background-color', 'transform'], {
+    duration: theme.transitions.duration.standard,
+  })};
+  &:hover {
+    background-color: rgba(34, 51, 84, 0.07);
+    transform: scale(1.01);
   }
 `
 );
@@ -44,7 +60,7 @@ function AuctionDetails({ auction }) {
     state: { accounts },
   } = useEth();
   return (
-    <ListItem id={auction.auctionContract._address}>
+    <ListItemWrapper id={auction.auctionContract._address}>
       <ListItemAvatarWrapper>
         {accounts[0] === auction.seller && (
           <Typography sx={{ fontWeight: 'bold' }}>✨My Auction✨</Typography>
@@ -139,6 +155,15 @@ function AuctionDetails({ auction }) {
             alignItems="center"
             spacing={2}
           >
+            <Typography>Start At</Typography>
+            {displayTimestampInHumanReadable(auction.startAt)}
+          </Stack>
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+            spacing={2}
+          >
             <Typography>Duration</Typography>
             {displayInHours(auction.duration)} hours
           </Stack>
@@ -166,7 +191,7 @@ function AuctionDetails({ auction }) {
           />
         </Box>
       </Box>
-    </ListItem>
+    </ListItemWrapper>
   );
 }
 

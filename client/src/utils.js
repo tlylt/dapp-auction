@@ -49,7 +49,7 @@ export async function getAuctions(web3, auctionFactoryContract, accounts) {
     const info = await auctionContract.methods
       .info()
       .call({ from: accounts[0] });
-    console.log("Auction info", info);
+    // console.log("Auction info", info);
     try {
       const mintNftContractAddress = await auctionContract.methods.nft().call();
       const mintNftContract = new web3.eth.Contract(
@@ -78,7 +78,7 @@ export async function getAuctions(web3, auctionFactoryContract, accounts) {
         nft: info[11],
         auctionContract: auctionContract,
       };
-      console.log("auction object", auction);
+      // console.log("auction object", auction);
       auctions.push(auction);
     } catch (e) {
       console.log("Unable to get NFT for auction: " + auctionContractAddress);
@@ -96,4 +96,11 @@ export function displayInGwei(wei) {
 export function displayInHours(seconds) {
   // rounded to 2 decimal places
   return Math.round((seconds / 60 / 60) * 100) / 100;
+}
+
+export function displayTimestampInHumanReadable(timestamp) {
+  if (timestamp === 0) {
+    return "Not Started";
+  }
+  return new Date(timestamp * 1000).toLocaleString();
 }

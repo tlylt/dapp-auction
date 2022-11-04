@@ -6,6 +6,10 @@ const ether = (n) => {
   return new web3.utils.BN(web3.utils.toWei(n.toString(), "ether"));
 };
 
+const gwei = (n) => {
+  return new web3.utils.BN(web3.utils.toWei(n.toString(), "gwei"));
+};
+
 module.exports = async function (callback) {
   try {
     // Fetch accounts from wallet - these are unlocked
@@ -44,8 +48,8 @@ module.exports = async function (callback) {
       const auction = await auctionFactory.createNewAuction(
         mintNFT.address,
         user.tokenId,
-        ether(0.01), // random starting price
-        ether(Math.floor(Math.random() * 100) / 10000), // random increment
+        gwei(1000000000 + 10000000 * i),
+        gwei(10000000 + 10000000 * i),
         hour, // set a random duration between 1 minute and 24 hours
         { from: user.account }
       );
