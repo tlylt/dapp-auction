@@ -42,9 +42,10 @@ function getRPCErrorMessage(err) {
 }
 
 const test = async (things, accounts) => {
-  let auctionContract = things.auctionContract;
-  let info = await auctionContract.methods.info().call({from: accounts[0]});
-  console.log(info);
+  console.log('Auction data: ', things)
+  // let auctionContract = things.auctionContract;
+  // let info = await auctionContract.methods.info().call({from: accounts[0]});
+  // console.log(info);
 };
 
 const calculateTimeTillExpiry = (auctionData) => {
@@ -108,8 +109,8 @@ function NFTListingBidModal({ pinataMetadata, auctionData }) {
       return;
     } else {
       let sendAmount = currBidAmount - auctionData.userBidAmount;
-      debugger;
-
+      // debugger;
+      console.log(currBidAmount, auctionData.userBidAmount, sendAmount);
       const auctionContract = auctionData.auctionContract;
       try {
         console.log(`sending amount = ${sendAmount}`);
@@ -117,6 +118,8 @@ function NFTListingBidModal({ pinataMetadata, auctionData }) {
           .bid()
           .send({ from: accounts[0], value: sendAmount });
         enqueueSnackbar("Successfully submitted bid!", { variant: "success" });
+        auctionData.userBidAmount = currBidAmount;
+        console.log(auctionData.userBidAmount)
       } catch (err) {
         enqueueSnackbar(getRPCErrorMessage(err), { variant: "error" });
       }
