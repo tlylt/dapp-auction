@@ -42,7 +42,7 @@ function AuctionApp() {
   const [auctionFactoryContract, setAuctionFactoryContract] = useState(null);
   const [auctions, setAuctions] = useState([]);
   const {
-    state: { web3, networkID },
+    state: { web3, networkID, accounts },
   } = useEth();
   useEffect(() => {
     if (web3 && networkID) {
@@ -55,15 +55,15 @@ function AuctionApp() {
   }, [auctions]);
   useEffect(() => {
     async function fetchData() {
-      const auctions = await getAuctions(web3, auctionFactoryContract);
+      const auctions = await getAuctions(web3, auctionFactoryContract, accounts);
       setAuctions(auctions);
     }
     if (auctionFactoryContract) {
       fetchData();
     }
-  }, [auctionFactoryContract, web3]);
+  }, [auctionFactoryContract, web3, accounts]);
   async function refetchData() {
-    const auctions = await getAuctions(web3, auctionFactoryContract);
+    const auctions = await getAuctions(web3, auctionFactoryContract, accounts);
     setAuctions(auctions);
     enqueueSnackbar('Auctions refreshed', {
       variant: 'success',

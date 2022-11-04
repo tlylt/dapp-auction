@@ -126,11 +126,12 @@ contract Auction is ReentrancyGuard {
         );
 
         // if the highestBidder has been overtaken, keep track of the previous highestBidder so that they can be refunded
-        if (highestBidder != address(0)) {
-            bids[highestBidder] = highestBid;
-        }
+        // if (highestBidder != address(0)) {
+        //     bids[highestBidder] = highestBid;
+        // }
 
         highestBid = msg.value + bids[msg.sender];
+        bids[msg.sender] = highestBid;
         highestBidder = msg.sender;
 
         emit Bid(highestBidder, highestBid);

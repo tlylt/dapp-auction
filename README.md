@@ -22,9 +22,10 @@ cd client
 node scripts/runScript.js
 # Save IPFS hash QmbFMke1KXqnYyBBWxB74N4c5SBnJMVAiMNRcGu6x1AwQH
 
-# Mint
+# Mint NFT
 cd truffle
 npx truffle console --network development
+migrate # optional
 const nft = await MintNFT.deployed()
 nft.address # address where MintNFT contract is deployed to. # 0xb981afF3030Fc2D019c1104243BdE7df0fDc36B6
 # Once the above are confirmed, you can mine your nft
@@ -34,7 +35,9 @@ tokenId // 1
 
 await nft.ownerOf(tokenId)
 # owner address 0x0a6EA4eE50c3fC7549E615cD0974c40a57a5330e
-```
+
+# Approve Auction
+Approve the auction contract using its address in the dropdown list above and the `tokenId` from previously
 
 # Setup Instructions
 
@@ -45,7 +48,9 @@ The project is setup using the Truffle suite for Ethereum, using Ganache to run 
 1. Install Truffle and Ganache globally
 
 ```
+
 npm i -g truffle ganache
+
 ```
 
 2. Install [MetaMask chrome extension](https://metamask.io/download/)
@@ -58,18 +63,22 @@ npm i -g truffle ganache
 6. Deploy the smart contracts (if any changes) to the local blockchain. You can double check contract is deployed in Ganache Desktop > `Contracts` tab
 
 ```
+
 // Ganache CLI
 cd truffle
 npm i # install the @openzeppelin/contracts npm dependency
 truffle migrate --network development
+
 ```
 
 5. Start the React web app
 
 ```
+
 cd client
 npm install
 npm start
+
 ```
 
 ## Minting NFT
@@ -84,7 +93,9 @@ First we need to obtain the ipfs hash for the nft metadata that you want
 4. Run runScript.js
 
 ```
-   node scripts/runScript.js
+
+node scripts/runScript.js
+
 ```
 
 5. To view the pinned object, browse: https://gateway.pinata.cloud/ipfs/{your_IpfsHash}. Your ipfsHash can be obtained from the last entry in ipfsHash.json
@@ -96,15 +107,17 @@ Now we need to mint an NFT using the metadata you have just created. We do this 
 2. Navigate into from the folder root ./truffle on your cmdln and open the truffle console and key in the following commands.
 
 ```
-   cd truffle
-   npx truffle console --network development
-   const nft = await MintNFT.deployed()   //returns undefined
-   nft.address // address where MintNFT contract is deployed to. Record this down for later
-   // Once the above are confirmed, you can mine your nft
-   let res = await nft.mint('https://gateway.pinata.cloud/ipfs/{ipfsHash}') // ipfsHash is from step 5 previously
-   let tokenId = res.receipt.logs[0].args.tokenId.words[0] // the NFT token ID. Record this down for later
 
-   await nft.ownerOf({token id}) // token id obtained from the previous step "type", this command should return your metamask address.
+cd truffle
+npx truffle console --network development
+const nft = await MintNFT.deployed() //returns undefined
+nft.address // address where MintNFT contract is deployed to. Record this down for later
+// Once the above are confirmed, you can mine your nft
+let res = await nft.mint('https://gateway.pinata.cloud/ipfs/{ipfsHash}') // ipfsHash is from step 5 previously
+let tokenId = res.receipt.logs[0].args.tokenId.words[0] // the NFT token ID. Record this down for later
+
+await nft.ownerOf({token id}) // token id obtained from the previous step "type", this command should return your metamask address.
+
 ```
 
 3. You have now successfully minted your nft. View the nft at: https://testnets.opensea.io/assets/goerli/0x60dd627e671F65b8cDFaf39AA0FB6b00ae1C18D6/{your_token_id}
@@ -191,3 +204,4 @@ Our auction contract uses Solidity 0.8.0, which has built-in overflow checking. 
 Images:
 
 - Beeple, Everydays: The First 5000 Days. Sold for: $69.3 million Beeple/Christie’s
+```

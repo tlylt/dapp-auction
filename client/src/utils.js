@@ -22,10 +22,11 @@ export function getAuctionFactoryContract(web3, networkID) {
   return auctionFactoryContract;
 }
 
-export async function getAuctions(web3, auctionFactoryContract) {
+export async function getAuctions(web3, auctionFactoryContract, accounts) {
   if (
     web3 === null ||
     auctionFactoryContract === null ||
+    accounts == null ||
     auctionFactoryContract === undefined
   ) {
     console.log(
@@ -48,7 +49,9 @@ export async function getAuctions(web3, auctionFactoryContract) {
     // TODO - Enforce min bid increment - highestBid, increment
     // TODO - Update highest bid by listening for emitted Bid events
     // TODO - Submit bid via payable Auction.bid()
-    const info = await auctionContract.methods.info().call();
+    const info = await auctionContract.methods
+      .info()
+      .call({ from: accounts[0] });
     console.log("Auction info", info);
     try {
       const mintNftContractAddress = await auctionContract.methods.nft().call();
