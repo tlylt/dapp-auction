@@ -42,7 +42,7 @@ function getRPCErrorMessage(err) {
 }
 
 const test = async (things, accounts) => {
-  console.log('Auction data: ', things)
+  console.log("Auction data: ", things);
   // let auctionContract = things.auctionContract;
   // let info = await auctionContract.methods.info().call({from: accounts[0]});
   // console.log(info);
@@ -119,7 +119,7 @@ function NFTListingBidModal({ pinataMetadata, auctionData }) {
           .send({ from: accounts[0], value: sendAmount });
         enqueueSnackbar("Successfully submitted bid!", { variant: "success" });
         auctionData.userBidAmount = currBidAmount;
-        console.log(auctionData.userBidAmount)
+        console.log(auctionData.userBidAmount);
       } catch (err) {
         enqueueSnackbar(getRPCErrorMessage(err), { variant: "error" });
       }
@@ -194,7 +194,11 @@ function NFTListingBidModal({ pinataMetadata, auctionData }) {
             </Typography>
             <Typography id="modal-modal-description" sx={{ mt: 2 }}>
               Time Till Expiry:
-              {auctionData.started ? (
+              {auctionData.ended ? (
+                <span>
+                  <i>Auction has already ended</i>
+                </span>
+              ) : auctionData.started ? (
                 <CountdownTimer
                   initialHour={timeTillExpiryHours}
                   initialMinute={timeTillExpiryMinutes}
