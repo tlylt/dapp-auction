@@ -1,6 +1,7 @@
 // Contracts
 const AuctionFactory = artifacts.require("AuctionFactory");
 const MintNFT = artifacts.require("MintNFT");
+const Auction = artifacts.require("Auction");
 
 // Utils
 const ether = (n) => {
@@ -19,9 +20,9 @@ module.exports = async function (callback) {
     // Fetch the deployed MintNFT
     const mintNFT = await MintNFT.deployed();
     console.log("MintNFT fetched", mintNFT.address);
-    // Set up 5 demo users in an array in a loop
+    // Set up 7 demo users in an array in a loop
     const demoUsers = [];
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 7; i++) {
       demoUsers.push({
         account: accounts[i],
       });
@@ -43,12 +44,13 @@ module.exports = async function (callback) {
       const auction = await auctionFactory.createNewAuction(
         mintNFT.address,
         user.tokenId,
-        ether(0.001), // startingBid
-        ether(0.002), // increment
-        60 * 60 * 24, // 1 day duration
+        ether(Math.floor(Math.random() * 100) / 10000), // random starting price
+        ether(Math.floor(Math.random() * 100) / 10000), // random increment
+        Math.floor(Math.random() * 1440) + 1, // set a random duration between 1 minute and 24 hours
         { from: user.account }
       );
       user.auctionAddress = auction.logs[0].args.newContractAddress;
+
     }
 
     // Each user approves the auction factory to spend their NFT
@@ -57,6 +59,17 @@ module.exports = async function (callback) {
       await mintNFT.approve(user.auctionAddress, user.tokenId, {
         from: user.account,
       });
+    }
+
+    // Start half of the auctions
+    for (let i = 0; i < demoUsers.length; i++) {
+      const user = demoUsers[i];
+      if (i % 2 === 0) {
+        // fetch auction
+        const auction = await Auction.at(user.auctionAddress);
+        // start auction
+        await auction.start({ from: user.account });
+      }
     }
 
     // Print out the demo users

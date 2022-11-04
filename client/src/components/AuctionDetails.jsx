@@ -80,7 +80,7 @@ function AuctionDetails({ auction }) {
             spacing={2}
           >
             <Typography>Highest Bid</Typography>
-            {displayInGwei(auction.highestBid)} (gwei)
+            {displayInGwei(auction.highestBid)} gwei
           </Stack>
           <Stack
             direction="row"

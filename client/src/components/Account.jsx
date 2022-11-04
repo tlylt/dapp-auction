@@ -44,7 +44,11 @@ function Account({ auctions }) {
                   fontWeight="normal"
                   color="text.secondary"
                 >
-                  Current Highest Bid Amount
+                  Current Highest Bid Amount{' '}
+                  {auction.highestBidder ===
+                  '0x0000000000000000000000000000000000000000'
+                    ? '(Your starting bid amount)'
+                    : '(From ' + auction.highestBidder.slice(0, 8) + '...)'}
                 </Typography>
                 <Typography
                   variant="h3"

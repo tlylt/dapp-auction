@@ -99,5 +99,6 @@ export function displayInGwei(wei) {
 }
 
 export function displayInHours(seconds) {
-  return seconds / 3600;
+  // rounded to 2 decimal places
+  return Math.round((seconds / 60 / 60) * 100) / 100;
 }

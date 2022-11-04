@@ -1,51 +1,49 @@
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Modal from "@mui/material/Modal";
-import TextField from "@mui/material/TextField";
-import Typography from "@mui/material/Typography";
-import { useSnackbar } from "notistack";
-import * as React from "react";
-import { useEffect, useState } from "react";
-import { useEth } from "../contexts/EthContext";
-import { displayInGwei } from "../utils";
-import CountdownTimer from "./CountdownTimer";
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Modal from '@mui/material/Modal';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import { useSnackbar } from 'notistack';
+import * as React from 'react';
+import { useEffect, useState } from 'react';
+import { useEth } from '../contexts/EthContext';
+import { displayInGwei } from '../utils';
+import CountdownTimer from './CountdownTimer';
 
 const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
   width: 400,
-  bgcolor: "background.paper",
-  border: "2px solid #000",
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
   boxShadow: 24,
   p: 4,
 };
 
 function getRPCErrorMessage(err) {
-  let msg = "";
+  let msg = '';
+  console.log(err);
   try {
-    var open = err.message.indexOf("{");
-    var close = err.message.lastIndexOf("}");
+    var open = err.message.indexOf('{');
+    var close = err.message.lastIndexOf('}');
     var j_s = err.message.substring(open, close + 1);
     var j = JSON.parse(j_s);
 
     msg = j.value.data.message;
-    open = msg.indexOf("revert");
+    open = msg.indexOf('revert');
     close = msg.length;
     msg = msg.substring(open + 7, close);
   } catch (err) {
-    msg = "An error occurred";
+    msg = 'An error occurred';
   }
 
   return msg;
 }
 
-const test = async (things, accounts) => {
-  console.log('Auction data: ', things)
-  // let auctionContract = things.auctionContract;
-  // let info = await auctionContract.methods.info().call({from: accounts[0]});
-  // console.log(info);
+const logAuctionData = async (auctionData) => {
+  console.log('Auction data: ', auctionData);
 };
 
 const calculateTimeTillExpiry = (auctionData) => {
@@ -90,12 +88,15 @@ function NFTListingBidModal({ pinataMetadata, auctionData }) {
   };
 
   const submitBid = async () => {
-    // Handle bidding
+    if (currBidAmount <= 0) {
+      enqueueSnackbar('Please enter a valid bid amount', { variant: 'error' });
+      return;
+    }
     // User bid amount is lower than highestBid or less than increment
     if (currBidAmount < highestBid) {
       // some notification
-      enqueueSnackbar("Bid amount is lower than highest bid", {
-        variant: "error",
+      enqueueSnackbar('Bid amount is lower than highest bid', {
+        variant: 'error',
       });
       return;
     } else if (
@@ -103,8 +104,8 @@ function NFTListingBidModal({ pinataMetadata, auctionData }) {
       accounts[0] !== auctionData.highestBidder
     ) {
       enqueueSnackbar(
-        "Bid amount should be greater than highest bid + increment!",
-        { variant: "warning" }
+        'Bid amount should be greater than highest bid + increment!',
+        { variant: 'warning' }
       );
       return;
     } else {
@@ -117,56 +118,83 @@ function NFTListingBidModal({ pinataMetadata, auctionData }) {
         await auctionContract.methods
           .bid()
           .send({ from: accounts[0], value: sendAmount });
-        enqueueSnackbar("Successfully submitted bid!", { variant: "success" });
+        enqueueSnackbar('Successfully submitted bid!', { variant: 'success' });
         auctionData.userBidAmount = currBidAmount;
-        console.log(auctionData.userBidAmount)
+        console.log(auctionData.userBidAmount);
       } catch (err) {
-        enqueueSnackbar(getRPCErrorMessage(err), { variant: "error" });
+        enqueueSnackbar(getRPCErrorMessage(err), { variant: 'error' });
       }
     }
   };
 
   const handleStartAuction = async () => {
+    if (auctionData.started) {
+      enqueueSnackbar('Auction already started!', { variant: 'error' });
+      return;
+    }
     const auctionContract = auctionData.auctionContract;
     try {
       await auctionContract.methods.start().send({ from: accounts[0] });
-      enqueueSnackbar("Auction Successfully Started", { variant: "success" });
-      console.log("auction started :D");
+      enqueueSnackbar('Auction Successfully Started', { variant: 'success' });
+      console.log('auction started :D');
     } catch (err) {
-      enqueueSnackbar(getRPCErrorMessage(err), { variant: "error" });
+      enqueueSnackbar(getRPCErrorMessage(err), { variant: 'error' });
     }
   };
 
   const handleWithdraw = async () => {
-    const auctionContract = auctionData.auctionContract;
-    try {
-      await auctionContract.methods.withdraw().send({ from: accounts[0] });
-      enqueueSnackbar("Successfully withdrew your bid amount", {
-        variant: "success",
+    // highest bidder cannot withdraw
+    if (auctionData.highestBidder === accounts[0]) {
+      enqueueSnackbar('You are the highest bidder! You cannot withdraw!', {
+        variant: 'error',
       });
-    } catch (err) {
-      enqueueSnackbar(getRPCErrorMessage(err), { variant: "error" });
+      return;
     }
-  };
-
-  const handleEnd = async () => {
     if (
-      accounts[0] !== auctionData.seller &&
-      accounts[0] !== auctionData.highestBidder
+      auctionData.highestBidder === '0x0000000000000000000000000000000000000000'
     ) {
-      enqueueSnackbar("You are not the seller nor highest bidder", {
-        variant: "error",
+      enqueueSnackbar('No one has placed any bid yet!', {
+        variant: 'error',
       });
       return;
     }
     const auctionContract = auctionData.auctionContract;
     try {
-      await auctionContract.methods.end().send({ from: accounts[0] });
-      enqueueSnackbar("Successfully ended the auction!", {
-        variant: "success",
+      await auctionContract.methods.withdraw().send({ from: accounts[0] });
+      enqueueSnackbar('Successfully withdrew your bid amount', {
+        variant: 'success',
       });
     } catch (err) {
-      enqueueSnackbar(getRPCErrorMessage(err), { variant: "error" });
+      enqueueSnackbar(getRPCErrorMessage(err), { variant: 'error' });
+    }
+  };
+
+  const handleEnd = async () => {
+    if (auctionData.ended) {
+      enqueueSnackbar('Auction already ended!', { variant: 'error' });
+      return;
+    }
+    if (
+      accounts[0] !== auctionData.seller &&
+      accounts[0] !== auctionData.highestBidder
+    ) {
+      enqueueSnackbar('You are not the seller nor highest bidder', {
+        variant: 'error',
+      });
+      return;
+    }
+    if (auctionData.endAt > Math.floor(Date.now() / 1000)) {
+      enqueueSnackbar('Auction is not over yet', { variant: 'error' });
+      return;
+    }
+    const auctionContract = auctionData.auctionContract;
+    try {
+      await auctionContract.methods.end().send({ from: accounts[0] });
+      enqueueSnackbar('Successfully ended the auction!', {
+        variant: 'success',
+      });
+    } catch (err) {
+      enqueueSnackbar(getRPCErrorMessage(err), { variant: 'error' });
     }
   };
 
@@ -175,15 +203,15 @@ function NFTListingBidModal({ pinataMetadata, auctionData }) {
       <Button onClick={handleOpen}>Open</Button>
       <Modal open={open} onClose={handleClose}>
         <Box sx={style}>
-          <Box display="flex" justifyContent={"space-between"}>
-            <Button onClick={() => test(auctionData, accounts)}>
-              Print auction info
+          <Box display="flex" justifyContent={'space-between'}>
+            <Button onClick={() => logAuctionData(auctionData)}>
+              Debug auction in console
             </Button>
             <Button onClick={handleClose}>Close</Button>
           </Box>
           <Box
             sx={{
-              marginLeft: "14px",
+              marginLeft: '14px',
             }}
           >
             <Typography id="modal-modal-title" variant="h6" component="h2">
@@ -194,7 +222,7 @@ function NFTListingBidModal({ pinataMetadata, auctionData }) {
             </Typography>
             <Typography id="modal-modal-description" sx={{ mt: 2 }}>
               Time Till Expiry:
-              {auctionData.started ? (
+              {auctionData.started && !auctionData.ended ? (
                 <CountdownTimer
                   initialHour={timeTillExpiryHours}
                   initialMinute={timeTillExpiryMinutes}
@@ -209,18 +237,18 @@ function NFTListingBidModal({ pinataMetadata, auctionData }) {
             <hr />
             <Box
               sx={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "10px",
-                alignItems: "center",
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '10px',
+                alignItems: 'center',
               }}
             >
               <Box display="flex">
                 <Typography>
-                  If you are the seller{" "}
+                  If you are the seller{' '}
                   <Button variant="contained" onClick={handleStartAuction}>
                     Start
-                  </Button>{" "}
+                  </Button>{' '}
                   <Button variant="contained" onClick={handleEnd}>
                     End
                   </Button>
@@ -244,10 +272,10 @@ function NFTListingBidModal({ pinataMetadata, auctionData }) {
               <Box>
                 <Box display="flex">
                   <Typography>
-                    No longer interested?{" "}
+                    No longer interested?{' '}
                     <Button variant="contained" onClick={handleWithdraw}>
-                      {" "}
-                      Withdraw{" "}
+                      {' '}
+                      Withdraw{' '}
                     </Button>
                   </Typography>
                 </Box>
