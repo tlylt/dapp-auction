@@ -49,14 +49,9 @@ export async function getAuctions(web3, auctionFactoryContract, accounts) {
     // TODO - Enforce min bid increment - highestBid, increment
     // TODO - Update highest bid by listening for emitted Bid events
     // TODO - Submit bid via payable Auction.bid()
-    // TODO - NFT Listing has different image sizes - standardize via css
     const info = await auctionContract.methods
       .info()
       .call({ from: accounts[0] });
-    // const info = await auctionContract.methods
-    //   .info({ from: accounts[0] })
-    //   .call();
-
     console.log("Auction info", info);
     try {
       const mintNftContractAddress = await auctionContract.methods.nft().call();
@@ -85,6 +80,7 @@ export async function getAuctions(web3, auctionFactoryContract, accounts) {
         userBidAmount: parseInt(info[8]),
         started: info[9],
         ended: info[10],
+        nft: info[11],
         auctionContract: auctionContract,
       };
       console.log("auction object", auction);
