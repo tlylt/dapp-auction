@@ -1,4 +1,4 @@
-import { Card, Box, Grid, Typography, Divider } from '@mui/material';
+import { Card, Box, Grid, Typography, Divider, Stack } from '@mui/material';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import { useEth } from '../contexts/EthContext';
@@ -37,7 +37,7 @@ function Account({ auctions }) {
             {auction ? (
               <Box>
                 <Typography variant="h1" gutterBottom>
-                  {displayInGwei(auction.highestBid)} gwei
+                  {displayInGwei(auction.highestBid)} gwei 💰
                 </Typography>
                 <Typography
                   variant="h4"
@@ -46,35 +46,83 @@ function Account({ auctions }) {
                 >
                   Current Highest Bid Amount
                 </Typography>
+                <Typography
+                  variant="h3"
+                  sx={{ marginTop: '10px', marginBottom: '10px' }}
+                >
+                  <a href={`#${auction.auctionContract._address}`}>
+                    Go to Auction
+                  </a>
+                </Typography>
                 <Box
                   display="flex"
                   sx={{
-                    py: 4,
+                    flexDirection: 'column',
                   }}
-                  alignItems="center"
                 >
-                  <Box>
-                    <Typography variant="h3">
-                      <a href={`#${auction.auctionContract._address}`}>
-                        Go to Auction
-                      </a>
-                    </Typography>
-                    <Typography variant="h4">
-                      Title:{auction.pinataMetadata.name}
-                    </Typography>
-                    <Typography variant="h4">
-                      Minimal increment:{displayInGwei(auction.increment)} gwei
-                    </Typography>
-                    <Typography variant="h4">
-                      Duration:{displayInHours(auction.duration)} hours
-                    </Typography>
-                    <Typography variant="h4">
-                      Start time:{auction.startAt}
-                    </Typography>
-                    <Typography variant="h4">
-                      End time:{auction.endAt}
-                    </Typography>
-                  </Box>
+                  <Stack
+                    direction="row"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    spacing={2}
+                  >
+                    <Typography variant="h4">Title</Typography>
+                    {auction.pinataMetadata.name}
+                  </Stack>
+                  <Stack
+                    direction="row"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    spacing={2}
+                  >
+                    <Typography variant="h4">Auction Address</Typography>
+                    {auction.auctionContract._address}
+                  </Stack>
+                  <Stack
+                    direction="row"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    spacing={2}
+                  >
+                    <Typography variant="h4">NFT Address</Typography>
+                    {auction.nft}
+                  </Stack>
+                  <Stack
+                    direction="row"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    spacing={2}
+                  >
+                    <Typography variant="h4">Token ID</Typography>
+                    {auction.nftId}
+                  </Stack>
+                  <Stack
+                    direction="row"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    spacing={2}
+                  >
+                    <Typography variant="h4">Token Standard</Typography>
+                    ERC-721
+                  </Stack>
+                  <Stack
+                    direction="row"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    spacing={2}
+                  >
+                    <Typography variant="h4">Minimal increment</Typography>
+                    {displayInGwei(auction.increment)} gwei
+                  </Stack>
+                  <Stack
+                    direction="row"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    spacing={2}
+                  >
+                    <Typography variant="h4">Duration</Typography>
+                    {displayInHours(auction.duration)} hours
+                  </Stack>
                 </Box>
               </Box>
             ) : (

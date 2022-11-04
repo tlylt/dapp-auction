@@ -87,7 +87,8 @@ contract Auction is ReentrancyGuard {
             uint256,
             uint256,
             bool,
-            bool
+            bool,
+            address
         )
     {
         return (
@@ -101,7 +102,8 @@ contract Auction is ReentrancyGuard {
             nftId,
             bids[msg.sender],
             started,
-            ended
+            ended,
+            address(nft)
         );
     }
 

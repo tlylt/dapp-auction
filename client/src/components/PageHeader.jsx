@@ -1,9 +1,15 @@
 import { Typography, Avatar, Grid, useTheme } from '@mui/material';
+import { useEth } from '../contexts/EthContext';
 import Creation from './Creation';
 
 function PageHeader({ refetchData }) {
+  const {
+    state: { accounts },
+  } = useEth();
   const user = {
-    avatar: 'https://avatars.dicebear.com/api/pixel-art-neutral/7.svg',
+    avatar: `https://avatars.dicebear.com/api/pixel-art-neutral/${
+      accounts === null ? '1' : accounts[0]
+    }.svg`,
   };
   const theme = useTheme();
 

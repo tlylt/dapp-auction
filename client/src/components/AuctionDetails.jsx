@@ -3,17 +3,20 @@ import {
   styled,
   ListItemAvatar,
   alpha,
-  ListItemText,
   Box,
+  Typography,
+  Stack,
+  Divider,
+  Tooltip,
 } from '@mui/material';
 import { useEth } from '../contexts/EthContext';
-import { displayInGwei } from '../utils';
+import { displayInGwei, displayInHours } from '../utils';
 import NFTListingBidModal from './NFTListingBidModal';
-import Text from './Text';
 
 const ListItemAvatarWrapper = styled(ListItemAvatar)(
   ({ theme }) => `
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   margin-right: ${theme.spacing(1)};
@@ -43,40 +46,125 @@ function AuctionDetails({ auction }) {
   return (
     <ListItem id={auction.auctionContract._address}>
       <ListItemAvatarWrapper>
-        <img alt="img" src={pinataMetadata.image} width={400} height={400} />
-      </ListItemAvatarWrapper>
-      <Box display="flex" flexDirection="column">
         {accounts[0] === auction.seller && (
-          <ListItemText primary={'✨My Auction✨'}></ListItemText>
+          <Typography sx={{ fontWeight: 'bold' }}>✨My Auction✨</Typography>
         )}
-        <ListItemText
-          primary={`Name: ${pinataMetadata.name}`}
-          primaryTypographyProps={{
-            variant: 'h5',
-            noWrap: true,
-          }}
-          secondary={`By: ${auction.seller}`}
-          secondaryTypographyProps={{
-            variant: 'subtitle2',
-            noWrap: true,
-          }}
+        <img alt="img" src={pinataMetadata.image} width={450} height={450} />
+      </ListItemAvatarWrapper>
+      <Box display="flex" flexDirection="column" sx={{ width: '100%' }}>
+        <Typography
+          sx={{ fontWeight: 'bold' }}
+        >{`Title: ${pinataMetadata.name}`}</Typography>
+        <Typography
+          sx={{ fontWeight: 'bold' }}
+        >{`Description: ${pinataMetadata.description}`}</Typography>
+        <Tooltip title={auction.seller} arrow>
+          <Typography sx={{ fontWeight: 'bold' }}>
+            {`Owned by: ${auction.seller.slice(0, 8)}...`}
+          </Typography>
+        </Tooltip>
+        <Divider
+          variant="middle"
+          sx={{ marginTop: '10px', marginBottom: '10px' }}
         />
-        <Text>Description: {pinataMetadata.description}</Text>
-        <Text>
-          Auction Contract Address: {auction.auctionContract._address}
-        </Text>
-        <Text>Highest Bid: {displayInGwei(auction.highestBid)} (gwei)</Text>
-        <Text>
-          Minimal Increment Per Bid: {displayInGwei(auction.increment)} (gwei)
-        </Text>
-        <Text>Auction Started: {auction.started ? 'Yes' : 'No'}</Text>
-        <Text>Auction Ended: {auction.ended ? 'Yes' : 'No'}</Text>
-      </Box>
-      <Box>
-        <NFTListingBidModal
-          pinataMetadata={pinataMetadata}
-          auctionData={auction}
-        />
+        <Box
+          display="flex"
+          sx={{
+            flexDirection: 'column',
+          }}
+        >
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+            spacing={2}
+          >
+            <Typography>Highest Bid</Typography>
+            {displayInGwei(auction.highestBid)} (gwei)
+          </Stack>
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+            spacing={2}
+          >
+            <Typography>Auction Address</Typography>
+            <Tooltip title={auction.auctionContract._address} arrow>
+              <Typography>
+                {auction.auctionContract._address.slice(0, 8) + '...'}
+              </Typography>
+            </Tooltip>
+          </Stack>
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+            spacing={2}
+          >
+            <Typography>NFT Address</Typography>
+            <Tooltip title={auction.nft} arrow>
+              <Typography>{auction.nft.slice(0, 8) + '...'}</Typography>
+            </Tooltip>
+          </Stack>
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+            spacing={2}
+          >
+            <Typography>Token ID</Typography>
+            {auction.nftId}
+          </Stack>
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+            spacing={2}
+          >
+            <Typography>Token Standard</Typography>
+            ERC-721
+          </Stack>
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+            spacing={2}
+          >
+            <Typography>Minimal increment</Typography>
+            {displayInGwei(auction.increment)} gwei
+          </Stack>
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+            spacing={2}
+          >
+            <Typography>Duration</Typography>
+            {displayInHours(auction.duration)} hours
+          </Stack>
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+            spacing={2}
+          >
+            <Typography>Auction Started</Typography>
+            {auction.started ? 'Yes' : 'No'}
+          </Stack>
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+            spacing={2}
+          >
+            <Typography>Auction Ended</Typography>
+            {auction.ended ? 'Yes' : 'No'}
+          </Stack>
+          <NFTListingBidModal
+            pinataMetadata={pinataMetadata}
+            auctionData={auction}
+          />
+        </Box>
       </Box>
     </ListItem>
   );
