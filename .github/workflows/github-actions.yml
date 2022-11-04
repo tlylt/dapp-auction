@@ -31,7 +31,7 @@ jobs:
           npm install
           npm run build
       - name: Install ganache
-        uses: npm install ganache --global
+        run: npm install ganache --global
       - name: Install contract deps
         run: |
           cd truffle
