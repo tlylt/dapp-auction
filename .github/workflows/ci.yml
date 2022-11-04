@@ -28,7 +28,7 @@ jobs:
       - name: Test build frontend
         run: |
           cd client
-          npm install
+          npm install --legacy-peer-deps
           npm run build
       - name: Install ganache
         run: npm install ganache --global
