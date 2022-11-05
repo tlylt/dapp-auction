@@ -921,9 +921,9 @@ export const PurpleFlowTheme = createTheme({
         },
         root: {
           ".MuiAutocomplete-inputRoot.MuiOutlinedInput-root .MuiAutocomplete-endAdornment":
-          {
-            right: 14,
-          },
+            {
+              right: 14,
+            },
         },
         clearIndicator: {
           background: colors.error.lighter,
