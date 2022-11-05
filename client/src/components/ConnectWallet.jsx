@@ -9,7 +9,6 @@ const Injected = new InjectedConnector({
   ],
 });
 
-// Generate a functional component with a button to enable users to connect to Metamask wallet
 const ConnectWallet = () => {
   const { account, chainId, activate, deactivate, active } = useWeb3React();
   return (

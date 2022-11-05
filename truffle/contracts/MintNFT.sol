@@ -64,11 +64,11 @@ contract MintNFT is Ownable, ERC721 {
         return string(abi.encodePacked(base, tokenId.toString()));
     }
 
-    function mint(string memory tokenURI) public returns (uint256) {
+    function mint(string memory tokenURIInput) public returns (uint256) {
         _tokenIds.increment();
         uint256 newItemId = _tokenIds.current();
         _safeMint(msg.sender, newItemId);
-        _setTokenURI(newItemId, tokenURI);
+        _setTokenURI(newItemId, tokenURIInput);
         return newItemId;
     }
 

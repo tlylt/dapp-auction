@@ -21,7 +21,15 @@ root.render(
     <Web3ReactProvider getLibrary={getLibrary}>
       <ThemeProvider>
         <EthProvider>
-          <SnackbarProvider maxSnack={3}>
+          <SnackbarProvider
+            maxSnack={3}
+            iconVariant={{
+              success: "✅",
+              error: "✖️",
+              warning: "⚠️",
+              info: "ℹ️",
+            }}
+          >
             <HelmetProvider>
               <App />
             </HelmetProvider>

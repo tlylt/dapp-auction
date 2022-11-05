@@ -1,23 +1,23 @@
-import CloseIcon from "@mui/icons-material/Close";
-import { Box, TextField } from "@mui/material";
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
-import IconButton from "@mui/material/IconButton";
-import { styled } from "@mui/material/styles";
-import Typography from "@mui/material/Typography";
-import { useSnackbar } from "notistack";
-import PropTypes from "prop-types";
-import * as React from "react";
-import { useState } from "react";
-import { useEth } from "../contexts/EthContext";
+import CloseIcon from '@mui/icons-material/Close';
+import { Box, TextField } from '@mui/material';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import IconButton from '@mui/material/IconButton';
+import { styled } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
+import { useSnackbar } from 'notistack';
+import PropTypes from 'prop-types';
+import * as React from 'react';
+import { useState } from 'react';
+import { useEth } from '../contexts/EthContext';
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-  "& .MuiDialogContent-root": {
+  '& .MuiDialogContent-root': {
     padding: theme.spacing(2),
   },
-  "& .MuiDialogActions-root": {
+  '& .MuiDialogActions-root': {
     padding: theme.spacing(1),
   },
 }));
@@ -33,7 +33,7 @@ function BootstrapDialogTitle(props) {
           aria-label="close"
           onClick={onClose}
           sx={{
-            position: "absolute",
+            position: 'absolute',
             right: 8,
             top: 8,
             color: (theme) => theme.palette.grey[500],
@@ -58,30 +58,30 @@ export default function Creation({ refetchData }) {
   const {
     state: { web3, networkID, accounts },
   } = useEth();
-  const auctionJson = require("../contracts/AuctionFactory.json");
+  const auctionJson = require('../contracts/AuctionFactory.json');
   let auctionFactoryContract;
 
   const handleCreate = async (e) => {
     e.preventDefault();
-    if (vars.nftAddress === "") {
-      enqueueSnackbar("NFT Address is required", { variant: "error" });
+    if (vars.nftAddress === '') {
+      enqueueSnackbar('NFT Address is required', { variant: 'error' });
       return;
     }
     if (vars.startingBid <= 0) {
-      enqueueSnackbar("Starting Bid must be greater than 0", {
-        variant: "error",
+      enqueueSnackbar('Starting Bid must be greater than 0', {
+        variant: 'error',
       });
       return;
     }
     if (vars.duration <= 0) {
-      enqueueSnackbar("Duration must be greater or equal to 1 hour", {
-        variant: "error",
+      enqueueSnackbar('Duration must be greater or equal to 1 hour', {
+        variant: 'error',
       });
       return;
     }
 
     if (vars.increment <= 0) {
-      enqueueSnackbar("Increment must be greater than 0", { variant: "error" });
+      enqueueSnackbar('Increment must be greater than 0', { variant: 'error' });
       return;
     }
 
@@ -95,7 +95,7 @@ export default function Creation({ refetchData }) {
         .createNewAuction(
           vars.nftAddress,
           vars.nftId,
-          vars.startingBid,
+          vars.startingBid * Math.pow(10, 9),
           vars.increment * Math.pow(10, 9), //convert from Gwei in form input to wei in Auction constructor
           vars.duration * 60 * 60 // convert from hours in form input to seconds in Auction constructor
         )
@@ -104,10 +104,10 @@ export default function Creation({ refetchData }) {
         val.events.ContractCreated.returnValues.newContractAddress;
       console.log(auctionDeployedAddress);
       setOpen(false);
-      enqueueSnackbar("Auction Created", { variant: "success" });
+      enqueueSnackbar('Auction Created', { variant: 'success' });
       setVars({
-        nftAddress: "",
-        nftId: "",
+        nftAddress: '',
+        nftId: '',
         startingBid: 0,
         increment: 0,
         duration: 0,
@@ -115,7 +115,7 @@ export default function Creation({ refetchData }) {
       refetchData();
     } catch (err) {
       console.log(err);
-      enqueueSnackbar("Transaction Rejected", { variant: "error" });
+      enqueueSnackbar('Transaction Rejected', { variant: 'error' });
       return;
     }
   };
@@ -127,7 +127,7 @@ export default function Creation({ refetchData }) {
     setOpen(false);
   };
   const [vars, setVars] = useState({
-    nftAddress: "",
+    nftAddress: '',
     nftId: 0,
     startingBid: 0,
     increment: 0,

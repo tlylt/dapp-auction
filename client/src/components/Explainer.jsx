@@ -19,8 +19,8 @@ export default function Explainer() {
   const checked = useWindowPosition('header');
   return (
     <div className={classes.root} id="explainers">
-      {explanations.map((explanation) => (
-        <ImageCard item={explanation} checked={checked} />
+      {explanations.map((explanation, idx) => (
+        <ImageCard item={explanation} checked={checked} key={idx} />
       ))}
     </div>
   );

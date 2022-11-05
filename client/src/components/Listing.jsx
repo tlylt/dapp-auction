@@ -61,7 +61,11 @@ function Listing({ auctions, refetchData }) {
                 </Typography>
               ) : (
                 auctions.map((auction, idx) => (
-                  <AuctionDetails auction={auction} key={idx} />
+                  <AuctionDetails
+                    auction={auction}
+                    refetchData={refetchData}
+                    key={idx}
+                  />
                 ))
               )}
             </List>

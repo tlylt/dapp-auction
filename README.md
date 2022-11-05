@@ -1,47 +1,60 @@
 # DApp - Auction
 
-## Seed
+[![Continuous Integration](https://github.com/tlylt/dapp-auction/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/tlylt/dapp-auction/actions/workflows/ci.yml)
 
+NFTAuction: Sell & Bid on NFTs Auctions Governed by Smart Contract
+
+## Quick Start
+
+```bash
+# start local blockchain
+ganache
+# keep track of private keys to import account for testing
+# 0x156def9ee6e65599671d0829e5994b26f786cbdf142450a2cb0a40a78e6fa250
+# 0x64af5f4d553f98aeb2d992e2a6bed318da9fdf65b94ab07cc4fbe9fabb5ed6f4
+cd truffle
+# compile and migrate contracts
+truffle migrate --network development
+
+cd client
+npm start
 ```
+
+Upload NFT data to IPFS
+
+```bash
+cd client
+node scripts/runScript.js
+# Save IPFS hash QmbFMke1KXqnYyBBWxB74N4c5SBnJMVAiMNRcGu6x1AwQH
+```
+
+Mint NFT
+
+```bash
+cd truffle
+npx truffle console --network development
+migrate # optional
+const nft = await MintNFT.deployed()
+nft.address # address where MintNFT contract is deployed to
+
+# Once the above are confirmed, you can mine your nft
+let res = await nft.mint('https://gateway.pinata.cloud/ipfs/QmZ5YDGxnAjtHB6apV2wAiRUAcAXeNsNfsaSHPjosGnTZT')
+let tokenId = res.receipt.logs[0].args.tokenId.words[0]
+tokenId
+
+await nft.ownerOf(tokenId)
+```
+
+Seed the local blockchain with some test data
+
+```bash
 ganache
 cd truffle
 truffle migrate --network development
 truffle exec scripts/seed.js
 ```
 
-## Quick Start
-
-```bash
-ganache
-# 0x7def1d6071feb01bc558816b44a8b300f8bfd026fd81cb57488481dada16ffff
-cd truffle
-truffle migrate --network development
-# auction factory address: 0x8227EF71284c48c4caAa15F26C9C1
-
-cd client
-node scripts/runScript.js
-# Save IPFS hash QmbFMke1KXqnYyBBWxB74N4c5SBnJMVAiMNRcGu6x1AwQH
-
-# Mint NFT
-cd truffle
-npx truffle console --network development
-migrate # optional
-const nft = await MintNFT.deployed()
-nft.address # address where MintNFT contract is deployed to. # 0xb981afF3030Fc2D019c1104243BdE7df0fDc36B6
-# Once the above are confirmed, you can mine your nft
-let res = await nft.mint('https://gateway.pinata.cloud/ipfs/QmZ5YDGxnAjtHB6apV2wAiRUAcAXeNsNfsaSHPjosGnTZT')
-let tokenId = res.receipt.logs[0].args.tokenId.words[0]
-tokenId // 1
-
-await nft.ownerOf(tokenId)
-# owner address 0x0a6EA4eE50c3fC7549E615cD0974c40a57a5330e
-```
-
-# Approve Auction
-
-Approve the auction contract using its address in the dropdown list above and the `tokenId` from previously
-
-# Setup Instructions
+## Setup Instructions
 
 The project is setup using the Truffle suite for Ethereum, using Ganache to run a local blockchain. The project is also setup using React, and uses the React Truffle box to interact with deployed smart contracts on the Ethereum blockchain from a React web app.
 
@@ -206,3 +219,4 @@ Our auction contract uses Solidity 0.8.0, which has built-in overflow checking. 
 Images:
 
 - Beeple, Everydays: The First 5000 Days. Sold for: $69.3 million Beeple/Christie’s
+- (And all other images used in our client/assets folder)

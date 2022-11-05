@@ -5,7 +5,7 @@ import Header from './components/Header';
 import Explainer from './components/Explainer';
 import { Helmet } from 'react-helmet-async';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     minHeight: '100vh',
     backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(assets/nft4.webp)`,
